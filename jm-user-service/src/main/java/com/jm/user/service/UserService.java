@@ -1,0 +1,77 @@
+package com.jm.user.service;
+
+import com.jm.sys.data.ResponseResult;
+import com.jm.sys.exception.BizException;
+import com.jm.sys.utils.PageBean;
+import com.jm.user.entity.AdminUser;
+import com.jm.user.vo.AdminUserLoginVo;
+import com.jm.user.vo.AdminUserVo;
+
+/**
+ * 用户模块
+ * @author Jack
+ *
+ */
+public interface UserService {
+
+	/**
+	 * 保存后台用户数据
+	 * @param adminUserVo 保存信息
+	 * @return
+	 */
+	public ResponseResult save(AdminUserVo adminUserVo)  throws Exception ;
+	
+	/**
+	 * 删除后台用户数据
+	 * @param 用户id
+	 * @return
+	 */
+	public ResponseResult delete(Long id,Long actionUserId)  throws Exception ;
+	
+	/**
+	 * 修改后台用户数据
+	 * @param adminUserVo 修改信息
+	 * @return
+	 * @throws RuntimeException
+	 */
+	public ResponseResult update(AdminUserVo adminUserVo)  throws Exception ;
+	
+	/**
+	 * 启用用户
+	 * @param 用户id 
+	 * @return
+	 */
+	public ResponseResult using(Long id,Long actionUserId)  throws Exception ;
+	
+	/**
+	 * 停用用户
+	 * @param 用户id 
+	 * @return
+	 */
+	public ResponseResult disabled(Long id,Long actionUserId)  throws Exception ;
+
+	/**
+	 * 用户登录
+	 * @param adminUserLoginVo
+	 * @return
+	 */
+	public ResponseResult login(AdminUserLoginVo adminUserLoginVo) throws Exception;
+
+	/**
+	 * 查询后台用户信息
+	 * @param pageNumber 页码
+	 * @param pageSize 页大小
+	 * @param adminUserVo 查询信息
+	 * @return
+	 * @throws Exception
+	 */
+	public PageBean webUserList(Integer pageNumber,Integer pageSize,AdminUserVo adminUserVo)  throws Exception;
+
+	/**
+	 * 根据用户id获取用户信息
+	 * @param id 用户id
+	 * @return 用户信息
+	 */
+	public AdminUser findInfoById(Long id) throws BizException;
+	
+}

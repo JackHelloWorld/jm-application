@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>用户管理</title>
+		<page-title>用户管理</page-title>
+		<page-desc>用户信息操作</page-desc>
+	</head>
+
+	<body>
+
+		<div class="box box-success">
+			<div class="box-header with-border">
+				<h3 class="box-title">操作栏</h3>
+			</div>
+
+			<div class="box-body form-horizontal">
+				<div class="form-group col-sm-6">
+					<label class="col-sm-2 control-label">用户名</label>
+					<div class="col-sm-8">
+						<input type="text" v-model="param.nickName" class="form-control" placeholder="用户名">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="col-sm-2 control-label">登录名</label>
+					<div class="col-sm-8">
+						<input type="text" v-model="param.loginName" class="form-control" placeholder="登录名">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="col-sm-2 control-label">角色</label>
+					<div class="col-sm-8">
+						<input type="text" v-model="param.roleName" class="form-control" placeholder="角色名称">
+					</div>
+				</div>
+				<div class="form-group col-sm-6">
+					<label class="col-sm-2 control-label">电话</label>
+					<div class="col-sm-8">
+						<input type="text" v-model="param.phone" class="form-control" placeholder="联系电话">
+					</div>
+				</div>
+			</div>
+
+			<div class="box-footer">
+				<button style="margin-right: 5px;" :class="btn.style" @click="actionBindClick(btn.clickAction)" v-for="btn in actions"><span :class="btn.icon"></span><span v-html="btn.text"></span></button>
+			</div>
+		</div>
+
+		<div class="box box-primary">
+			<div class="box-header">
+				<h3 class="box-title">列表信息</h3>
+			</div>
+
+			<!-- /.box-header -->
+			<div class="box-body">
+				<div class="table-responsive mailbox-messages">
+					<table class="table table-hover table-striped">
+						<thead>
+							<th>选择</th>
+							<th>用户名称</th>
+							<th>登录名</th>
+							<th>角色</th>
+							<th>电话</th>
+							<th>描述</th>
+							<th>状态</th>
+							<th>最后一次登录时间</th>
+						</thead>
+						<tbody>
+							<tr v-for="(info,index) in page.list" @click="clickRow(index)">
+								<td>
+									<i v-if="index == page.selected" style="font-size: 20px;color: #337ab7;" class="glyphicon glyphicon-check"></i>
+									<i v-else style="font-size: 20px;" class="glyphicon glyphicon-unchecked"></i>
+								</td>
+								<td v-html="info.nickName"></td>
+								<td v-html="info.loginName"></td>
+								<td v-html="info.roleName"></td>
+								<td v-html="info.phone"></td>
+								<td v-html="info.adminDesc"></td>
+								<td>
+									<span class="label label-success" v-if="info.status == 0">正常</span>
+									<span class="label label-warning"  v-if="info.status == 1">已停用</span>
+								</td>
+								<td v-html="info.lastLoginTime"></td>
+							</tr>
+							<tr v-if="page.list == null || page.list.length == 0">
+								<td :colspan="nodata.colspan" class="text-center" v-html="nodata.text"></td>
+							</tr>
+						</tbody>
+					</table>
+					<!-- /.table -->
+				</div>
+			</div>
+			<div class="box-footer" v-if="page.list != null && page.list.length > 0">
+				<div class="row">
+					<div class="col-md-6 pull-left">
+						共<span class="text-light-blue" v-html="page.total"></span>条&nbsp;显示<span class="text-light-blue" v-html="page.startRow"></span> 到
+						<span v-html="page.endRow" class="text-light-blue"></span> &nbsp;每页显示
+						<select v-model="param.pageSize" @change="changePageSize()">
+							<option value="10">10</option>
+							<option value="50">50</option>
+							<option value="100">100</option>
+							<option value="200">200</option>
+						</select>
+						条记录&nbsp;共<span v-html="page.pages" class="text-light-blue"></span>页
+					</div>
+					<div class="col-md-6">
+						<ul class="pagination pagination-sm no-margin pull-right">
+							<li>
+								<a href="javascript:;" @click="toPage(1)">首页</a>
+							</li>
+							<li>
+								<a href="javascript:;" @click="toPage(page.prePage)">上一页</a>
+							</li>
+							<li v-for="number in page.navigatepageNums" :class="page.pageNum == number?'active':''">
+								<a href="javascript:;" @click="toPage(number)" v-html="number"></a>
+							</li>
+							<li>
+								<a href="javascript:;" @click="toPage(page.nextPage)">下一页</a>
+							</li>
+							<li>
+								<a @click="toPage(page.navigateLastPage)" href="javascript:;">尾页</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="editModel" style="display: none;padding-top: 10px;" class="col-sm-12 form-horizontal">
+			
+			<div class="form-group"><label class="col-sm-3 control-label">登录名<span class="text-red">*</span></label>
+				<div class="col-sm-9"><input type="text" :readonly="editData.edit" placeholder="登录名" class="form-control" v-model="editData.loginName"></div>
+			</div>
+			<div class="form-group"><label class="col-sm-3 control-label">用户名<span class="text-red">*</span></label>
+				<div class="col-sm-9"><input type="text" placeholder="用户名" class="form-control" v-model="editData.nickName"></div>
+			</div>
+			<div class="form-group"><label class="col-sm-3 control-label">电话</label>
+				<div class="col-sm-9"><input type="text" placeholder="电话" class="form-control" v-model="editData.phone"></div>
+			</div>
+			<div class="form-group"><label class="col-sm-3 control-label">角色<span class="text-red">*</span></label>
+				<div class="col-sm-9">
+					<select class="form-control" v-model="editData.roleId">
+						<option value="">未选择</option>
+						<option v-for="info in roles" :value="info.id" v-html="info.name"></option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group"><label class="col-sm-3 control-label">用户描述</label>
+				<div class="col-sm-9"><input type="text" placeholder="用户描述" class="form-control" v-model="editData.adminDesc"></div>
+			</div>
+		</div>
+
+		<script src="plugins/index/webuser.js"></script>
+	</body>
+
+</html>
