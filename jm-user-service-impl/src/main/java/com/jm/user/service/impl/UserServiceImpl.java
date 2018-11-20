@@ -157,6 +157,8 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 			break;
 
 		}
+		
+		adminUserVo.setCreateUserId("0");
 
 		validataEdit(adminUserVo, adminUser);
 		if(!Tools.isLong(adminUserVo.getLastUpdateUserId()))
