@@ -127,10 +127,14 @@ var selectMenus = function(u) {
 				case 404:
 					$("#page-content").html(error404);
 					$("title:eq(0)").html("页面找不到");
+					$("#page-title").html("请求错误");
+					$("#page-desc").html("错误代码404");
 					break;
 				default:
 					$("#page-content").html(error500);
 					$("title:eq(0)").html("网络错误");
+					$("#page-title").html("请求错误");
+					$("#page-desc").html("错误代码500");
 					break;
 			}
 		}
