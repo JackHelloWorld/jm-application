@@ -14,4 +14,6 @@ public interface AdminResourceRepository extends JpaRepository<AdminResource, Lo
 
 	List<AdminResource> findByParentIdAndTypeInOrderBySortAsc(Long parentId, Integer[] types);
 
+	long countById(Long parentId);
+
 }

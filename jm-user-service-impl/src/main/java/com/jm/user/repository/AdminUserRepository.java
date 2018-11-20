@@ -17,5 +17,7 @@ public interface AdminUserRepository extends JpaRepository<AdminUser, Long>{
 	AdminUser findTop1ByLoginNameAndStatusIn(String loginName, Integer[] status);
 
 	AdminUser findTop1ByIdAndStatusNot(Long id, Integer status);
+
+	long countByRoleIdAndStatusNot(Long id, Integer status);
 	
 }

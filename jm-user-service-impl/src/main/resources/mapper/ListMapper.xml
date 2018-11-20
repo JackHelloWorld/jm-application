@@ -5,19 +5,20 @@
 
 	<select id="roleList" resultType="hashMap" parameterType="com.jm.user.entity.AdminRole">
 		SELECT
-			sre.*, sur.u_name AS createUserName
+			sre.*, sur.nick_name AS createUserName
 		FROM
-			sys_role sre,
-			sys_user sur
+			admin_role sre,
+			admin_user sur
 		WHERE
-			sur.id = sre.create_user
-		AND sre.r_status = 0
+			sur.id = sre.create_user_id
+		AND sre.r_status in (0,1)
 		<if test="name != null and name != ''">
 			and sre.r_name like #{name}
 		</if>
-		<if test="intro != null and intro != ''">
-			and sre.r_intro like #{intro}
+		<if test="remark != null and remark != ''">
+			and sre.r_remark like #{remark}
 		</if>
+		order by create_time desc
 	</select>
 
 	<select id="sysUserList" resultType="hashMap" parameterType="com.jm.user.entity.AdminUser">

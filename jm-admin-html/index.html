@@ -18,6 +18,9 @@
 		<!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
 		<link rel="stylesheet" href="./dist/css/skins/_all-skins.min.css">
+		
+		<!-- ztree -->
+		<link rel="stylesheet" href="plugins/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css">
 
 		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -53,7 +56,7 @@
 					</a>
 
 					<div class="navbar-custom-menu">
-						<ul class="nav navbar-nav">
+						<ul class="nav navbar-nav" id="navContent">
 							<!-- Messages: style can be found in dropdown.less-->
 							<li class="dropdown messages-menu">
 								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
@@ -113,7 +116,7 @@
 							<li class="dropdown user user-menu">
 								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
 									<img src="./dist/img/user2-160x160.jpg" class="user-image" alt="User Image">
-									<span class="hidden-xs">张三</span>
+									<span class="hidden-xs" v-html="userInfo.nickName"></span>
 								</a>
 								<ul class="dropdown-menu">
 									<!-- User image -->
@@ -121,8 +124,8 @@
 										<img src="./dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
 										<p>
-											张三 - 管理员
-											<small>登录时间&nbsp;:&nbsp;2018-10-10 12:12:12</small>
+											<span v-html="userInfo.nickName"></span> - <span v-html="userInfo.roleName?userInfo.roleName : '无'"></span>
+											<small>登录时间&nbsp;:&nbsp;<span v-html="userInfo.lastLoginTime"></span></small>
 										</p>
 									</li>
 
@@ -153,13 +156,13 @@
 				<!-- sidebar: style can be found in sidebar.less -->
 				<section class="sidebar">
 					<!-- Sidebar user panel -->
-					<div class="user-panel">
+					<div class="user-panel" id="navContent2">
 						<div class="pull-left image">
 							<img src="./dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 						</div>
 						<div class="pull-left info">
-							<p>张三</p>
-							<a href="javascript:;"><i class="fa fa-circle text-success"></i> 管理员</a>
+							<p v-html="userInfo.nickName"></p>
+							<a href="javascript:;"><i class="fa fa-circle text-success"></i> <span v-html="userInfo.roleName?userInfo.roleName:'无'"></span></a>
 						</div>
 					</div>
 					<!-- search form -->
@@ -240,7 +243,9 @@
 		<script src="plugins/config.js"></script>
 		<script src="plugins/tools.js"></script>
 		<script src="plugins/vue.min.js"></script>
-		<script src="plugins/index/index.js"></script>
+		<script type="text/javascript" src="plugins/ztree/js/jquery.ztree.core.js"></script>
+		<script type="text/javascript" src="plugins/ztree/js/jquery.ztree.excheck.js"></script>
+		<script src="plugins/js/index.js"></script>
 	</body>
 	<script>
 	</script>

@@ -2,6 +2,7 @@ package com.jm.user.service;
 
 import java.util.List;
 
+import com.jm.sys.data.ResponseResult;
 import com.jm.sys.exception.BizException;
 import com.jm.user.entity.AdminResource;
 
@@ -30,5 +31,36 @@ public interface AdminResourceService {
 	 * @return
 	 */
 	public List<AdminResource> findUserResource(Long userId,Integer[] types,Long parentId,boolean dispose) throws BizException;
+
+	/**
+	 * 获取所以资源信息
+	 * @param id
+	 * @return
+	 */
+	public List<AdminResource> findAllResource(Long id) throws BizException;
+
+	/***
+	 * 删除资源信息
+	 * @param id 资源id
+	 * @param userId 操作员id
+	 * @return
+	 */
+	public ResponseResult delete(String id, Long userId) throws BizException;
+
+	/***
+	 * 修改资源信息
+	 * @param id 资源信息
+	 * @param userId 操作员id
+	 * @return
+	 */
+	public ResponseResult update(AdminResource adminResource, Long userId) throws Exception;
+
+	/***
+	 * 保存资源信息
+	 * @param id 资源信息
+	 * @param userId 操作员id
+	 * @return
+	 */
+	public ResponseResult save(AdminResource adminResource, Long userId)  throws Exception;
 	
 }

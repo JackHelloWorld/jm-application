@@ -8,6 +8,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import com.jm.sys.annotation.QueryConfig;
+import com.jm.sys.annotation.QueryConfig.QueryType;
+import com.jm.sys.annotation.ValidateEdit;
+import com.jm.sys.annotation.ValidateEdit.ValidateType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,9 +37,12 @@ public class AdminRole implements java.io.Serializable{
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
+	@QueryConfig(QueryType.LIKEBOTH)
+	@ValidateEdit(type=ValidateType.NULL,message="请输入角色名称")
 	@Column(name="r_name")
 	private String name;
 	
+	@QueryConfig(QueryType.LIKEBOTH)
 	@Column(name="r_remark")
 	private String remark;
 	
@@ -46,5 +55,8 @@ public class AdminRole implements java.io.Serializable{
 	/**状态:{0:正常,1:禁用,2:删除}*/
 	@Column(name="r_status")
 	private Integer status;
+	
+	@Transient
+	private String createUserName;
 
 }

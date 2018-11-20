@@ -14,4 +14,13 @@ public interface AdminRoleRepository extends JpaRepository<AdminRole, Long>{
 
 	List<AdminRole> findByStatusOrderByCreateTimeDesc(Integer status);
 	
+	long countByIdAndStatus(Long roleId, Integer status);
+
+	long countByNameAndStatusNot(String name, Integer status);
+
+	long countByNameAndStatusNotAndIdNot(String name, Integer status, Long id);
+
+	AdminRole findTop1ByIdAndStatusNot(Long id, Integer status);
+	
+	
 }

@@ -64,6 +64,8 @@ var urlConfig = {
 		deleteInfo : 'http://192.168.2.101:9999/role/delete',
 		resource : 'http://192.168.2.101:9999/role/resource',
 		findResource : 'http://192.168.2.101:9999/role/find/resource',
+		block : 'http://192.168.2.101:9999/role/block',
+		success : 'http://192.168.2.101:9999/role/success',
 	},
 	
 	/**webuser.html*/
