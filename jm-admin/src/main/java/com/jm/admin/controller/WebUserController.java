@@ -57,6 +57,18 @@ public class WebUserController extends BaseAdminController{
 		return userService.update(adminUserVo);
 	}
 	
+	@PostMapping("find/resource")
+	@ValidateAuth("/webuser/resource")
+	public ResponseResult findUserResource(@RequestParam(value="id",defaultValue="0")Long id) throws Exception{
+		return userService.findUserResource(id,getUser());
+	}
+	
+	@PostMapping("resource")
+	public ResponseResult resource(@RequestParam(value="id",defaultValue="0")Long id,@RequestParam(value="ids",defaultValue="")String ids) throws Exception{
+		String[] ids1 = ids.split(",");
+		return adminRoleService.resourceUser(id,ids1,getUser());
+	}
+	
 	@PostMapping("success")
 	public ResponseResult success(@RequestParam(value="id",defaultValue="0") Long id) throws Exception{
 		return userService.using(id, getUser().getId());

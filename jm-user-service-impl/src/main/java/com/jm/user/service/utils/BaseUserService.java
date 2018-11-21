@@ -143,6 +143,7 @@ public class BaseUserService implements Serializable{
 			Map<String, Object> param = new HashMap<>();
 			param.put("type", types);
 			param.put("roleId", adminUser.getRoleId());
+			param.put("userId", adminUser.getId());
 			list = authDao.findThisResourceByType(param);
 		}
 		if(dispose)
@@ -168,6 +169,7 @@ public class BaseUserService implements Serializable{
 			Map<String, Object> param = new HashMap<>();
 			param.put("type", types);
 			param.put("roleId", adminUser.getRoleId());
+			param.put("userId", adminUser.getId());
 			list = authDao.findThisResourceByType(param);
 		}
 		if(dispose)

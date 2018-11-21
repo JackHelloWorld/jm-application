@@ -3,6 +3,7 @@ package com.jm.user.service;
 import java.util.List;
 
 import com.jm.sys.data.ResponseResult;
+import com.jm.sys.exception.BizException;
 import com.jm.user.entity.AdminRole;
 import com.jm.user.entity.AdminUser;
 
@@ -93,5 +94,14 @@ public interface AdminRoleService {
 	 * @throws Exception
 	 */
 	public ResponseResult block(Long id, AdminUser user) throws Exception;
+
+	/**
+	 * 用户资源授权
+	 * @param userId 用户id 
+	 * @param ids 资源信息
+	 * @param user 操作人信息
+	 * @return
+	 */
+	public ResponseResult resourceUser(Long userId, String[] ids, AdminUser user)  throws BizException;
 	
 }

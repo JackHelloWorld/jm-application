@@ -71,8 +71,10 @@ var urlConfig = {
 	/**webuser.html*/
 	webuser : {
 		list : 'http://127.0.0.1:9999/webuser/list',
+		resource : 'http://127.0.0.1:9999/webuser/resource',
 		updateInfo : 'http://127.0.0.1:9999/webuser/update/info',
 		update : 'http://127.0.0.1:9999/webuser/update',
+		findResource : 'http://127.0.0.1:9999/webuser/find/resource',
 		save : 'http://127.0.0.1:9999/webuser/save',
 		deleteInfo : 'http://127.0.0.1:9999/webuser/delete',
 		findRoles : 'http://127.0.0.1:9999/webuser/find/roles',

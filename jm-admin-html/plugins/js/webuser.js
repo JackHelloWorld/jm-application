@@ -222,3 +222,67 @@ var blockInfo = function(){
 		
 	});
 }
+
+var zNodes;
+var treeObj;
+
+var settings = {
+	data : {
+		simpleData : {
+			enable : true,
+			
+		},
+		key : {
+			title : 'text',
+			name : 'text',
+			children : 'nodes',
+			url : null,
+			click : 'null',
+			checked: 'own',
+		}
+	},
+	check: {
+		enable: true,
+		nocheck : false,
+		autoCheckTrigger: false
+	}
+};
+
+var resource = function(){
+	
+	if(contentVue.page.selected == null || contentVue.page.selected == undefined){
+		layer.msg("请选择需要操作的信息",{icon:7});
+		return;
+	}
+	var id = contentVue.page.list[contentVue.page.selected].id;
+	post(urlConfig.webuser.findResource,{id:id},function(data){
+			zNodes = data.data;
+			treeObj = $.fn.zTree.init($("#resourceUl"), settings, zNodes);
+			treeObj.expandAll(true);
+			//页面层
+			layer.open({
+			  type: 1,
+			  title : '资源授权:',
+			  skin: 'layui-layer-rim', //加上边框
+			  area: ['400px', '80%'], //宽高
+			  content: $("#resourceModel"),
+			  btn:['确定','取消'],
+			  yes : function(index){
+			  	var nodes = treeObj.getCheckedNodes(true);
+			  	var ids = '';
+				for(var i = 0;i<nodes.length;i++){
+					ids = ids + nodes[i].id + ',';
+				}
+			  	post(urlConfig.webuser.resource,{id:id,ids:ids},function(d){
+			  		layer.msg("授权成功",{icon:1});
+			  		layer.close(index);
+			  	},function(d){
+			  		layer.msg(d.msg,{icon:2});
+			  	});
+			  },
+			});
+		},function(data){
+			layer.msg(data.msg,{icon:7});
+	});
+
+}

@@ -73,5 +73,13 @@ public interface UserService {
 	 * @return 用户信息
 	 */
 	public AdminUser findInfoById(Long id) throws BizException;
+
+	/**
+	 * 获取指定用户的资源信息
+	 * @param id 用户id
+	 * @param user 操作员信息
+	 * @return
+	 */
+	public ResponseResult findUserResource(Long id, AdminUser user) throws BizException;
 	
 }

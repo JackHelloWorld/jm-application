@@ -1,7 +1,9 @@
 package com.jm.user.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -26,6 +28,7 @@ import com.jm.user.entity.AdminRole;
 import com.jm.user.entity.AdminUser;
 import com.jm.user.entity.AdminUserLoginLog;
 import com.jm.user.entity.AdminUserStatusRecord;
+import com.jm.user.mybatis.AuthDao;
 import com.jm.user.mybatis.ListDao;
 import com.jm.user.repository.AdminRoleRepository;
 import com.jm.user.repository.AdminUserLoginLogRepository;
@@ -44,6 +47,9 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 
 	@Resource
 	AdminRoleRepository adminRoleRepository;
+	
+	@Resource
+	AuthDao authDao;
 
 	@Reference
 	private BaseService baseService;
@@ -286,6 +292,47 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 	public AdminUser findInfoById(Long id) throws BizException {
 		AdminUser adminUser = checkActionUserStatus(id);
 		return adminUser;
+	}
+
+	@Override
+	public ResponseResult findUserResource(Long id, AdminUser adminUser) throws BizException {
+		
+		checkActionUserStatus(adminUser);
+		
+		AdminUser user = adminUserRepository.findTop1ByIdAndStatusNot(id, 2);
+		if(user == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在");
+		
+		/**账号状态,0:正常,1:停用,2:已经删除*/
+		switch (user.getStatus()) {
+		case 1:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户已停用无法操作资源");
+
+		default:
+			break;
+		}
+		
+		if(user.getIsAdmin() != null && user.getIsAdmin())
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无法操作管理员资源");
+		
+		//加载资源
+		Map<String, Object> param = new HashMap<>();
+		param.put("roleId", user.getRoleId());
+		List<AdminResource> adminResources = authDao.findRoleResourceByType(param);
+		param.put("userId", user.getId());
+		List<AdminResource> userResources = authDao.findThisResourceByType(param);
+		
+		for (AdminResource adminResource : adminResources) {
+			for (AdminResource userResource : userResources) {
+				if(adminResource.getId().equals(userResource.getId())){
+					adminResource.setOwn(true);
+					break;
+				}
+			}
+		}
+		
+		List<AdminResource> data = initResource(adminResources, 0L);
+		return ResponseResult.SUCCESS("获取资源成功", data);
 	}
 
 }

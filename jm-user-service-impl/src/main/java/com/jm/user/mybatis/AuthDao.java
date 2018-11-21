@@ -18,7 +18,14 @@ public interface AuthDao {
 
 	/**
 	 * 获取当前用户资源信息,非管理员 
-	 * @param param
+	 * @param param {roleId:角色id,parentId:父id,type:类型集合}
+	 * @return
+	 */
+	List<AdminResource> findRoleResourceByType(Map<String, Object> param);
+
+	/**
+	 * 获取用户资源信息
+	 * @param param {roleId:角色id,parentId:父id,type:类型集合,userId : 用户id}
 	 * @return
 	 */
 	List<AdminResource> findThisResourceByType(Map<String, Object> param);

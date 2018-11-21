@@ -52,6 +52,7 @@ public class AdminResourceServiceImpl extends BaseUserService implements AdminRe
 			Map<String, Object> param = new HashMap<>();
 			param.put("type", types);
 			param.put("roleId", adminUser.getRoleId());
+			param.put("userId", adminUser.getId());
 			param.put("parentId", parentId);
 			list = authDao.findThisResourceByType(param);
 		}

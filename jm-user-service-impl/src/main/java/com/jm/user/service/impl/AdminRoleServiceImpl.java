@@ -24,12 +24,14 @@ import com.jm.sys.utils.PageUtils;
 import com.jm.sys.utils.Tools;
 import com.jm.user.entity.AdminResource;
 import com.jm.user.entity.AdminResourceRole;
+import com.jm.user.entity.AdminResourceUser;
 import com.jm.user.entity.AdminRole;
 import com.jm.user.entity.AdminUser;
 import com.jm.user.mybatis.AuthDao;
 import com.jm.user.mybatis.ListDao;
 import com.jm.user.repository.AdminResourceRepository;
 import com.jm.user.repository.AdminResourceRoleRepository;
+import com.jm.user.repository.AdminResourceUserRepository;
 import com.jm.user.repository.AdminRoleRepository;
 import com.jm.user.repository.AdminUserRepository;
 import com.jm.user.service.AdminRoleService;
@@ -52,6 +54,9 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 
 	@Resource
 	AdminResourceRoleRepository adminResourceRoleRepository;
+	
+	@Resource
+	AdminResourceUserRepository adminResourceUserRepository;
 
 	@Resource
 	AdminResourceRepository adminResourceRepository;
@@ -147,7 +152,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		List<AdminResource> adminResources = adminResourceRepository.findAll(new Sort(Direction.ASC, "sort"));
 		Map<String, Object> param = new HashMap<>();
 		param.put("roleId", id);
-		List<AdminResource> resources = authDao.findThisResourceByType(param);
+		List<AdminResource> resources = authDao.findRoleResourceByType(param);
 		for (AdminResource adminResource : adminResources) {
 			for (AdminResource node : resources) {
 				if(node.getId().equals(adminResource.getId())){
@@ -236,6 +241,52 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		adminRole.setStatus(1);
 		adminRoleRepository.save(adminRole);
 		return ResponseResult.SUCCESSM("停用信息成功");
+	}
+
+	@Override
+	public ResponseResult resourceUser(Long userId, String[] ids, AdminUser adminUser) throws BizException {
+
+		checkActionUserStatus(adminUser.getId());
+
+		AdminUser user = adminUserRepository.findTop1ByIdAndStatusNot(userId, 2);
+		if(user == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在");
+		
+		/**账号状态,0:正常,1:停用,2:已经删除*/
+		switch (user.getStatus()) {
+		case 1:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户已停用无法操作资源");
+
+		default:
+			break;
+		}
+		
+		if(user.getIsAdmin() != null && user.getIsAdmin())
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无法操作管理员资源");
+
+		//删除资源配置
+		adminResourceUserRepository.deleteByUserId(user.getId());
+
+		Date actionDate = new Date();
+
+		for (String id : ids) {
+			if(!Tools.isLong(id))
+				ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息选择错误").throwBizException();
+
+			if(adminResourceRepository.countById(Long.parseLong(id)) == 0)
+				ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息不存在").throwBizException();
+
+			//储存配置
+			AdminResourceUser resourceUser = new AdminResourceUser();
+			resourceUser.setCreateTime(actionDate);
+			resourceUser.setCreateUser(adminUser.getId());
+			resourceUser.setResourceId(Long.parseLong(id));
+			resourceUser.setUserId(userId);
+			adminResourceUserRepository.save(resourceUser);
+		}
+
+		return ResponseResult.SUCCESSM("授权操作成功");
+
 	}
 
 }
