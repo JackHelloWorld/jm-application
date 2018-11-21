@@ -61,6 +61,9 @@
 		<if test="roleId != null">
 			AND srer.role_id = #{roleId}
 		</if>
+		<if test="userId != null">
+			AND srur.user_id = #{userId}
+		</if>
 		<if test="parentId != null">
 			AND sre.parent_id = #{parentId}
 		</if>
