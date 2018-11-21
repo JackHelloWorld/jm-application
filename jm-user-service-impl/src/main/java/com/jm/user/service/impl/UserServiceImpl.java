@@ -81,7 +81,7 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		adminUser.setIsAdmin(false);
 
 		adminUser.setLoginEncry(baseService.generateEncry(6));
-		adminUser.setLoginPwd(Tools.MD5(userDefaultPassword, adminUser.getLoginPwd()));
+		adminUser.setLoginPwd(Tools.MD5(userDefaultPassword, adminUser.getLoginEncry()));
 		adminUserRepository.save(adminUser);
 		return ResponseResult.SUCCESSM("新增操作员成功");
 	}
