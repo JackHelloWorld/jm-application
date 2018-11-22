@@ -117,6 +117,9 @@ public class AnnotationUtils {
 					case DOUBLE:
 						token = !Tools.isDouble(value);
 						break;
+					case PHONE:
+						token = !Tools.checkPhone(value.toString());
+						break;
 
 					default:
 						break;

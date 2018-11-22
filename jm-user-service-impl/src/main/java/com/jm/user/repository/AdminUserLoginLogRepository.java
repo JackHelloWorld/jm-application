@@ -7,5 +7,7 @@ import com.jm.user.entity.AdminUserLoginLog;
 
 @Repository
 public interface AdminUserLoginLogRepository extends JpaRepository<AdminUserLoginLog, Long>{
+
+	long countByUserId(Long userId);
 	
 }

@@ -42,7 +42,10 @@ public @interface ValidateEdit {
 		DOUBLE,
 		
 		/**BIGDECIMAL 数字校验*/
-		BIGDECIMAL;
+		BIGDECIMAL,
+		
+		/**手机号字校验*/
+		PHONE;
 	}
 	
 	

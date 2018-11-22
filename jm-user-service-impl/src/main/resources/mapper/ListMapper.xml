@@ -69,4 +69,8 @@
 		order by aur.createtime desc
 	</select>
 
+	<select id="findLoginLog" resultType="hashMap">
+		select * from admin_user_login_log where user_id = #{userId} order by login_time desc
+	</select>
+
 </mapper>

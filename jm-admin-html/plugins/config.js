@@ -23,6 +23,14 @@ var urlConfig = {
 	userExit : 'http://127.0.0.1:9999/user/logout',
 	//修改密码
 	updatePassword : 'http://127.0.0.1:9999/user/update/password',
+	//修改资料
+	updateProfile : 'http://127.0.0.1:9999/user/update/profile',
+	
+	//统计登录信息
+	countLoginInfo : 'http://127.0.0.1:9999/user/count/logininfo',
+	
+	//获取登录信息
+	findLoginInfo : 'http://127.0.0.1:9999/user/find/logininfo',
 	
 	//根据菜单获得功能资源信息
 	getAction : 'http://127.0.0.1:9999/home/find/action',
@@ -36,7 +44,7 @@ var urlConfig = {
 		//文件上传地址
 		fileUpload : 'http://127.0.0.1:9999/common/upload/file',
 		//修改头像
-		updateProfile : 'http://127.0.0.1:9999/common/update_profile',
+		updateImgProfile : 'http://127.0.0.1:9999/common/update_profile',
 	},
 	
 	/**resource.html*/

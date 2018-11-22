@@ -5,7 +5,9 @@ import com.jm.sys.exception.BizException;
 import com.jm.sys.utils.PageBean;
 import com.jm.user.entity.AdminUser;
 import com.jm.user.vo.AdminUserLoginVo;
+import com.jm.user.vo.AdminUserProfileVo;
 import com.jm.user.vo.AdminUserVo;
+import com.jm.user.vo.UpdatePasswordVo;
 
 /**
  * 用户模块
@@ -81,5 +83,36 @@ public interface UserService {
 	 * @return
 	 */
 	public ResponseResult findUserResource(Long id, AdminUser user) throws BizException;
+
+	/**
+	 * 获取指定用户的登录次数
+	 * @param adminUser 用户信息
+	 * @return
+	 */
+	public ResponseResult countLogininfo(AdminUser adminUser);
+
+	/**
+	 * 获取指定用户的登录记录
+	 * @param pageNumber 页码
+	 * @param pageSize 页大小
+	 * @param adminUser 用户信息
+	 * @return
+	 */
+	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUser user) throws Exception;
+
+	/**
+	 * 修改用户资料
+	 * @param adminUser 修改信息
+	 * @return
+	 */
+	public ResponseResult updateInfo(AdminUserProfileVo adminUserProfileVo) throws Exception;
+
+	/**
+	 * 修改用户密码
+	 * @param updatePasswordVo 密码信息
+	 * @return
+	 */
+	public ResponseResult updatePassword(UpdatePasswordVo updatePasswordVo) throws Exception;
+
 	
 }

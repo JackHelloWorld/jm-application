@@ -37,7 +37,9 @@ import com.jm.user.repository.AdminUserStatusRecordRepository;
 import com.jm.user.service.UserService;
 import com.jm.user.service.utils.BaseUserService;
 import com.jm.user.vo.AdminUserLoginVo;
+import com.jm.user.vo.AdminUserProfileVo;
 import com.jm.user.vo.AdminUserVo;
+import com.jm.user.vo.UpdatePasswordVo;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
@@ -340,6 +342,69 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		
 		List<AdminResource> data = initResource(adminResources, 0L);
 		return ResponseResult.SUCCESS("获取资源成功", data);
+	}
+
+	@Override
+	public ResponseResult countLogininfo(AdminUser adminUser) {
+		
+		if(adminUser == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在");
+		
+		long count = adminUserLoginLogRepository.countByUserId(adminUser.getId());
+		
+		return ResponseResult.SUCCESS("获取登录次数成功", count);
+	}
+
+	@Override
+	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUser adminUser) throws Exception {
+		
+		if(adminUser == null)
+			ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在").throwBizException();
+		
+		return PageUtils.query(pageNumber, pageSize, new PageQuery() {
+			
+			@Override
+			public List<?> query() {
+				return listDao.findLoginLog(adminUser.getId());
+			}
+		}, AdminUserLoginLog.class);
+	}
+
+	@Override
+	public ResponseResult updateInfo(AdminUserProfileVo adminUserProfileVo) throws Exception {
+		
+		AnnotationUtils.validateEdit(adminUserProfileVo);
+		
+		AdminUser adminUser = checkActionUserStatus(adminUserProfileVo.getId());
+		
+		adminUser.setAddress(adminUserProfileVo.getAddress());
+		adminUser.setIntro(adminUserProfileVo.getIntro());
+		adminUser.setNickName(adminUserProfileVo.getNickName());
+		adminUser.setPhone(adminUserProfileVo.getPhone());
+		adminUserRepository.save(adminUser);
+		
+		return ResponseResult.SUCCESSM("资料修改成功");
+	}
+
+	@Override
+	public ResponseResult updatePassword(UpdatePasswordVo updatePasswordVo) throws Exception {
+		
+		AnnotationUtils.validateEdit(updatePasswordVo);
+		
+		AdminUser adminUser = checkActionUserStatus(updatePasswordVo.getId());
+		
+		if(!Tools.MD5(updatePasswordVo.getOld_password().trim(), adminUser.getLoginEncry()).equals(adminUser.getLoginPwd()))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "原密码输入错误");
+		
+		String checkPwd = "^(?![a-zA-z]+$)(?!\\d+$)(?![!@#$%^&*]+$)[a-zA-Z\\d!@#$%^&*]+$";
+		
+		if(!updatePasswordVo.getNew_password().trim().matches(checkPwd) || updatePasswordVo.getNew_password().trim().length() <= 8){
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "密码必须包含字母和数字或特殊字符并且长度大于8位");
+		}
+		
+		adminUser.setLoginPwd(Tools.MD5(updatePasswordVo.getNew_password().trim(), adminUser.getLoginEncry()));
+		adminUserRepository.save(adminUser);
+		return ResponseResult.SUCCESSM("密码修改成功");
 	}
 
 }

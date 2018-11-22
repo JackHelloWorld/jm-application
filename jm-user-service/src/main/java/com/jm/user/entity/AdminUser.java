@@ -116,6 +116,18 @@ public class AdminUser implements Serializable{
 	@Column(name="phone")
 	private String phone;
 	
+	/**邮箱*/
+	@Column(name="u_email")
+	private String email;
+	
+	/**我的简介*/
+	@Column(name="u_intro")
+	private String intro;
+	
+	/**地址信息*/
+	@Column(name="u_address")
+	private String address;
+	
 	@Transient
 	private String token;
 	

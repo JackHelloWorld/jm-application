@@ -23,11 +23,14 @@ import com.jm.sys.annotation.ValidateAuth;
 import com.jm.sys.annotation.ValidateIgnoreLogin;
 import com.jm.sys.data.ResponseResult;
 import com.jm.sys.data.ResultCode;
+import com.jm.sys.utils.PageBean;
 import com.jm.sys.utils.Tools;
 import com.jm.sys.utils.VerifyCodeUtils;
 import com.jm.user.entity.AdminUser;
 import com.jm.user.service.UserService;
 import com.jm.user.vo.AdminUserLoginVo;
+import com.jm.user.vo.AdminUserProfileVo;
+import com.jm.user.vo.UpdatePasswordVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -117,6 +120,34 @@ public class UserController extends BaseAdminController{
 		String token = getUser().getToken();
 		redisTemplate.delete(token);
 		return ResponseResult.SUCCESSM("退出成功");
+	}
+	
+	@PostMapping("count/logininfo")
+	@ValidateAuth(validate=false)
+	public ResponseResult countLogininfo(){
+		return userService.countLogininfo(getUser());
+	}
+	
+	@PostMapping("find/logininfo")
+	@ValidateAuth(validate=false)
+	public ResponseResult findLogininfo(@RequestParam(value="pageNumber",defaultValue="1") Integer pageNumber,
+			@RequestParam(value="pageSize",defaultValue="10") Integer pageSize) throws Exception{
+		PageBean pageBean = userService.findLogininfo(pageNumber,pageSize,getUser());
+		return ResponseResult.SUCCESS("获取登录记录成功", pageBean);
+	}
+	
+	@PostMapping("update/profile")
+	@ValidateAuth(validate=false)
+	public ResponseResult update(AdminUserProfileVo adminUserProfileVo) throws Exception{
+		adminUserProfileVo.setId(getUser().getId());
+		return userService.updateInfo(adminUserProfileVo);
+	}
+	
+	@PostMapping("update/password")
+	@ValidateAuth(validate=false)
+	public ResponseResult updatePassword(UpdatePasswordVo updatePasswordVo) throws Exception{
+		updatePasswordVo.setId(getUser().getId());
+		return userService.updatePassword(updatePasswordVo);
 	}
 	
 }

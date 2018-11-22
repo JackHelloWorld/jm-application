@@ -1,3 +1,4 @@
+var userInfo;
 $(function() {
 	$("#homeUrl").attr("href", '#' + encryptUrl('page/home'));
 	initUrl();
@@ -5,8 +6,6 @@ $(function() {
 		actionMenus(data.data);
 		selectMenus(location.href.split('#')[1]);
 	}, function(data) {});
-	
-	var userInfo;
 	
 	if(getData('login_user')){
 		userInfo = eval('('+getData('login_user')+')');
