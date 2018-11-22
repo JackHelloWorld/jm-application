@@ -64,9 +64,17 @@ public class BaseUserService implements Serializable{
 		
 		//检查角色
 		if(adminUser.getIsAdmin() == null || !adminUser.getIsAdmin()){
-			AdminRole adminRole = adminRoleRepository.findTop1ByIdAndStatusIn(adminUser.getRoleId(), new Integer[]{0});
+			AdminRole adminRole = adminRoleRepository.findTop1ByIdAndStatusIn(adminUser.getRoleId(), new Integer[]{0,1});
 			if(adminRole == null)
 				ResponseResult.DIY_ERROR(ResultCode.ReqErrorCode, "当前登录角色有误,无法操作").throwBizException();
+			
+			switch (adminRole.getStatus()) {
+			case 1:
+				ResponseResult.DIY_ERROR(ResultCode.ReqErrorCode, "当前登录角色已停用,无法操作").throwBizException();
+
+			default:
+				break;
+			}
 			adminUser.setAdminRole(adminRole);
 		}
 		

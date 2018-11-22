@@ -52,7 +52,7 @@ public class AdminRole implements java.io.Serializable{
 	@Column(name="create_user_id")
 	private Long createUserId;
 	
-	/**状态:{0:正常,1:禁用,2:删除}*/
+	/**状态:{0:正常,1:停用,2:删除}*/
 	@Column(name="r_status")
 	private Integer status;
 	
