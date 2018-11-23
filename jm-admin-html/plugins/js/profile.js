@@ -103,6 +103,7 @@ $(function() {
 		}
 	});
 	findLoginInfo();
+	selectAction.isSubmit = false;
 });
 
 //统计登录信息
@@ -211,7 +212,8 @@ function setImagePreview(avalue) {
 			localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
 			localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
 		} catch(e) {
-			alert("您上传的图片格式不正确，请重新选择!");
+			layer.msg("您上传的图片格式不正确，请重新选择!",{icon:7});
+			selectAction.isSubmit = false;
 			return false;
 		}
 		imgObjPreview.style.display = 'none';
@@ -250,8 +252,8 @@ function getRoundedCanvas(sourceCanvas) {
 	return canvas;
 }
 var cropper;
-selectAction.isSubmit = true;
 var initSelect = function() {
+	selectAction.isSubmit = true;
 	setImagePreview();
 	var file = document.getElementById('selectImgFileInput');
 
@@ -318,19 +320,28 @@ var initSelect = function() {
 	});
 	cropper.reset();
 	selectAction.select = function(success) {
-		var croppedCanvas;
-		var roundedCanvas;
-		var roundedImage;
-
-		if(!croppable) {
-			return;
+		var data = null;
+		
+		try {
+			var croppedCanvas;
+			var roundedCanvas;
+			var roundedImage;
+			if(!croppable) {
+				return;
+			}
+			// Crop
+			croppedCanvas = cropper.getCroppedCanvas();
+			// Round
+			roundedCanvas = getRoundedCanvas(croppedCanvas);
+			data = dataURLtoBlob(roundedCanvas.toDataURL());
+		} catch(e) {
+			if(data == null){
+				layer.msg("选择文件有误,无法上传",{icon:7});
+				return;
+			}
 		}
-		// Crop
-		croppedCanvas = cropper.getCroppedCanvas();
-		// Round
-		roundedCanvas = getRoundedCanvas(croppedCanvas);
-		blob = dataURLtoBlob(roundedCanvas.toDataURL());
-		success(blob);
+		
+		success(data);
 	}
 
 	function dataURLtoBlob(dataurl) {
