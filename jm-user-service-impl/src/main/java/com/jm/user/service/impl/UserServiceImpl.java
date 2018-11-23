@@ -407,4 +407,17 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		return ResponseResult.SUCCESSM("密码修改成功");
 	}
 
+	@Override
+	public ResponseResult updateProfile(String profile, AdminUser user) throws BizException {
+		
+		AdminUser adminUser = checkActionUserStatus(user.getId());
+		
+		if(Tools.isNullOrNullStr(profile))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "未上传头像信息,修改失败");
+		
+		adminUser.setHeadPortrait(profile.trim());
+		adminUserRepository.save(adminUser);
+		return ResponseResult.SUCCESSM("头像修改成功");
+	}
+
 }

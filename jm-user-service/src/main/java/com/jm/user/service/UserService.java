@@ -114,5 +114,13 @@ public interface UserService {
 	 */
 	public ResponseResult updatePassword(UpdatePasswordVo updatePasswordVo) throws Exception;
 
+	/**
+	 * 用户修改头像
+	 * @param profile
+	 * @param user
+	 * @return
+	 */
+	public ResponseResult updateProfile(String profile, AdminUser user) throws BizException;
+
 	
 }

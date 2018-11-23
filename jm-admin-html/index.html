@@ -115,13 +115,13 @@
 							<!-- User Account: style can be found in dropdown.less -->
 							<li class="dropdown user user-menu">
 								<a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
-									<img :src="(userInfo.head_portrait != null && userInfo.head_portrait.length > 5) ? userInfo.head_portrait : './dist/img/profile.jpg' " alt="我的头像" class="user-image">
+									<img :src="(userInfo.headPortrait != null && userInfo.headPortrait.length > 5) ? userInfo.headPortrait : './dist/img/profile.jpg' " alt="我的头像" class="user-image">
 									<span class="hidden-xs" v-html="userInfo.nickName"></span>
 								</a>
 								<ul class="dropdown-menu">
 									<!-- User image -->
 									<li class="user-header">
-										<img :src="(userInfo.head_portrait != null && userInfo.head_portrait.length > 5) ? userInfo.head_portrait : './dist/img/profile.jpg' " class="img-circle" alt="User Image">
+										<img :src="(userInfo.headPortrait != null && userInfo.headPortrait.length > 5) ? userInfo.headPortrait : './dist/img/profile.jpg' " class="img-circle" alt="User Image">
 
 										<p>
 											<span v-html="userInfo.nickName"></span> - <span v-html="userInfo.roleName?userInfo.roleName : '无'"></span>
@@ -158,7 +158,7 @@
 					<!-- Sidebar user panel -->
 					<div class="user-panel" id="navContent2">
 						<div class="pull-left image">
-							<img :src="(userInfo.head_portrait != null && userInfo.head_portrait.length > 5) ? userInfo.head_portrait : './dist/img/profile.jpg' " alt="我的头像">
+							<img :src="(userInfo.headPortrait != null && userInfo.headPortrait.length > 5) ? userInfo.headPortrait : './dist/img/profile.jpg' " alt="我的头像">
 						</div>
 						<div class="pull-left info">
 							<p v-html="userInfo.nickName"></p>

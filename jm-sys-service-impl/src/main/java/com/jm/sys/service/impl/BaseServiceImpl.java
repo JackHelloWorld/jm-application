@@ -1,5 +1,7 @@
 package com.jm.sys.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -15,6 +17,7 @@ import com.jm.sys.entity.SerialNumber;
 import com.jm.sys.repository.SerialNumberRepository;
 import com.jm.sys.service.BaseService;
 import com.jm.sys.utils.DatePattern;
+import com.jm.sys.utils.FtpUtils;
 import com.jm.sys.utils.Tools;
 
 @Service
@@ -25,6 +28,9 @@ public class BaseServiceImpl implements BaseService{
 
 	@Resource
 	SerialNumberRepository serialNumberRepository;
+	
+	@Resource
+	FtpUtils ftpUtils;
 	
 	public static final ThreadLocal<Random> random = new ThreadLocal<Random>(){
 		protected Random initialValue() {
@@ -60,6 +66,24 @@ public class BaseServiceImpl implements BaseService{
 			}
 		}
 		return nodes;
+	}
+	
+	/**
+	 * 文件上传,
+	 * @param b byte数组
+	 * @param fileName 文件名称
+	 * @return 文件路径
+	 */
+	public String upload(byte[] b,String fileName){
+		try {
+			InputStream input = new ByteArrayInputStream(b);
+			boolean result = ftpUtils.uploadFile(fileName, input);
+			if(result)
+				return fileName;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

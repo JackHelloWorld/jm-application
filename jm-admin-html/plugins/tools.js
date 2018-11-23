@@ -47,6 +47,56 @@ var post = function(url,data,success,error){
 	});
 };
 
+var postForm = function(url,data,success,error){
+	var indexLoadding = layer.load(1, {
+	  shade: [0.1,'#fff']
+	});
+	var token = '';
+	if(getData('login_user')){
+		token = eval('('+getData('login_user')+')').token;
+	}
+	
+	$.ajax({
+		type:"post",
+		url:url,
+		data:data,
+		headers : {'token':token},
+		processData: false,
+		contentType: false,
+		success:function(d){
+			layer.close(indexLoadding);
+			if(d.status){
+				success(d);
+			}else{
+				switch(d.code){
+					case 1:
+					if(requery_temp == 0){
+						layer.alert('您的登录已过期<br>请重新登录',{icon:7,end:function(){
+							location.href='login.html';
+						}});
+						requery_temp = 1;
+					}
+					break;
+					case 12:
+						layer.msg(d.msg,{icon:7});
+					break;
+					case 500:
+						layer.msg(d.msg,{icon:2});
+					break;
+					default:
+						error(d);
+					break;
+				}
+			}
+		},
+		error : function(e){
+			layer.close(indexLoadding);
+			layer.msg("网络错误",{icon:2});
+			console.log(e);
+		}
+	});
+};
+
 
 var uploadImg = function(t,success,error){
 		var file = $(t).get(0).files[0];
