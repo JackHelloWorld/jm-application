@@ -221,7 +221,6 @@ function setImagePreview(avalue) {
 	return true;
 };
 
-let blob = ''
 
 function each(arr, callback) {
 	var length = arr.length;
