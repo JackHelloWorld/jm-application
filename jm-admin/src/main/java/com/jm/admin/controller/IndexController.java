@@ -3,8 +3,8 @@ package com.jm.admin.controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.web.BaseController;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.web.BaseController;
 
 
 @RestController

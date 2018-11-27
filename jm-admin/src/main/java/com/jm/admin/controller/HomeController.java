@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.exception.BizException;
-import com.jm.user.entity.AdminResource;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.exception.BizException;
 import com.jm.user.service.AdminResourceService;
+import com.jm.user.vo.AdminResourceVo;
 
 @RestController
 @RequestMapping("home")
@@ -27,14 +27,14 @@ public class HomeController extends BaseAdminController{
 	@PostMapping("find/menus")
 	@ValidateAuth(validate=false)
 	public ResponseResult findMenus() throws BizException{
-		List<AdminResource> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{0}, true);
+		List<AdminResourceVo> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{0}, true);
 		return ResponseResult.SUCCESS("获取菜单成功",adminResources);
 	}
 	
 	@PostMapping("find/action")
 	@ValidateAuth(validate=false)
 	public ResponseResult findAction(@RequestParam(value="parent_id",defaultValue="0") Long parentId) throws BizException{
-		List<AdminResource> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{1}, parentId,false);
+		List<AdminResourceVo> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{1}, parentId,false);
 		return ResponseResult.SUCCESS("获取功能资源成功",adminResources);
 	}
 	

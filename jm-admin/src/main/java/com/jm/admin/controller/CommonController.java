@@ -9,11 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
-import com.jm.sys.exception.BizException;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.exception.BizException;
 import com.jm.sys.service.CommonService;
 import com.jm.sys.vo.FileVo;
 import com.jm.user.service.UserService;

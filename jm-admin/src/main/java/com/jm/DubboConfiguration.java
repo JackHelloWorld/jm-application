@@ -9,7 +9,7 @@ import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ConsumerConfig;
 import com.alibaba.dubbo.config.ProviderConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
-import com.jm.sys.data.ConfigData;
+import com.jm.common.data.ConfigData;
 
 @Configuration
 public class DubboConfiguration {

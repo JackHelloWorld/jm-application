@@ -2,6 +2,8 @@ package com.jm;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
 import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
 
@@ -10,7 +12,7 @@ import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
  * @author Jack
  *
  */
-@SpringBootApplication
+@SpringBootApplication(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
 @DubboComponentScan(basePackages = "com.jm.message.service")
 public class MessageApplication {
 	

@@ -1,7 +1,7 @@
 package com.jm.admin.utils;
 
-import com.jm.sys.web.BaseController;
-import com.jm.user.entity.AdminUser;
+import com.jm.common.web.BaseController;
+import com.jm.user.vo.AdminUserDbVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +14,7 @@ public class BaseAdminController extends BaseController{
 	 * 获取登录用户
 	 * @return
 	 */
-	protected AdminUser getUser(){
+	protected AdminUserDbVo getUser(){
 		log.info("get user info");
 		return ThreadData.ADMIN_USER.get();
 	}

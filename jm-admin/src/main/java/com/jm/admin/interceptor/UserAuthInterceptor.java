@@ -13,11 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jm.admin.service.AuthService;
 import com.jm.admin.utils.ThreadData;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultDic;
-import com.jm.sys.utils.Tools;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultDic;
+import com.jm.common.utils.Tools;
 
 public class UserAuthInterceptor implements HandlerInterceptor{
 

@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.exception.BizException;
-import com.jm.user.entity.AdminResource;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.exception.BizException;
 import com.jm.user.service.AdminResourceService;
 import com.jm.user.service.UserService;
+import com.jm.user.vo.AdminResourceVo;
 
 @RestController
 @RequestMapping("resource")
@@ -37,12 +37,12 @@ public class ResourceController extends BaseAdminController{
 	}
 	
 	@PostMapping("update")
-	public ResponseResult update(AdminResource adminResource) throws Exception{
+	public ResponseResult update(AdminResourceVo adminResource) throws Exception{
 		return resourceService.update(adminResource,getUser().getId());
 	}
 	
 	@PostMapping("save")
-	public ResponseResult save(AdminResource adminResource) throws Exception{
+	public ResponseResult save(AdminResourceVo adminResource) throws Exception{
 		return resourceService.save(adminResource,getUser().getId());
 	}
 	

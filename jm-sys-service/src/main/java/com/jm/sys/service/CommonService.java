@@ -1,6 +1,6 @@
 package com.jm.sys.service;
 
-import com.jm.sys.data.ResponseResult;
+import com.jm.common.data.ResponseResult;
 import com.jm.sys.vo.FileVo;
 
 /**

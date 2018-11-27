@@ -8,9 +8,10 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
-import com.jm.sys.exception.BizException;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.exception.BizException;
+import com.jm.common.utils.BeanTools;
 import com.jm.user.entity.AdminResource;
 import com.jm.user.entity.AdminRole;
 import com.jm.user.entity.AdminUser;
@@ -18,6 +19,9 @@ import com.jm.user.mybatis.AuthDao;
 import com.jm.user.repository.AdminResourceRepository;
 import com.jm.user.repository.AdminRoleRepository;
 import com.jm.user.repository.AdminUserRepository;
+import com.jm.user.vo.AdminResourceVo;
+import com.jm.user.vo.AdminRoleVo;
+import com.jm.user.vo.AdminUserDbVo;
 
 public class BaseUserService implements Serializable{
 
@@ -87,7 +91,7 @@ public class BaseUserService implements Serializable{
 	 * @return 操作员对象
 	 * @throws BizException 
 	 */
-	protected void checkActionUserStatus(AdminUser adminUser) throws BizException {
+	protected void checkActionUserStatus(AdminUserDbVo adminUser) throws BizException {
 		
 		if(adminUser == null)
 			ResponseResult.DIY_ERROR(ResultCode.ReqErrorCode, "操作员信息不存在").throwBizException();
@@ -108,7 +112,8 @@ public class BaseUserService implements Serializable{
 			AdminRole adminRole = adminRoleRepository.findTop1ByIdAndStatusIn(adminUser.getRoleId(), new Integer[]{0});
 			if(adminRole == null)
 				ResponseResult.DIY_ERROR(ResultCode.ReqErrorCode, "当前登录角色有误,无法操作").throwBizException();
-			adminUser.setAdminRole(adminRole);
+			
+			adminUser.setAdminRole(BeanTools.setPropertiesToBean(adminRole, AdminRoleVo.class));
 		}
 		
 	}
@@ -119,12 +124,12 @@ public class BaseUserService implements Serializable{
 	 * @param parentId
 	 * @return
 	 */
-	protected List<AdminResource> initResource(List<AdminResource> adminResources,Long parentId){
-		List<AdminResource> nodes = new ArrayList<>();
-		for (AdminResource adminResource : adminResources) {
+	protected List<AdminResourceVo> initResource(List<AdminResourceVo> adminResources,Long parentId){
+		List<AdminResourceVo> nodes = new ArrayList<>();
+		for (AdminResourceVo adminResource : adminResources) {
 			if(adminResource.getParentId().equals(parentId)){
 				nodes.add(adminResource);
-				List<AdminResource> myNodes = initResource(adminResources,adminResource.getId());
+				List<AdminResourceVo> myNodes = initResource(adminResources,adminResource.getId());
 				adminResource.setNodes(myNodes);
 			}
 		}
@@ -139,14 +144,18 @@ public class BaseUserService implements Serializable{
 	 * @return
 	 * @throws BizException 
 	 */
-	public List<AdminResource> findUserResource(Long userId,Integer[] types,boolean dispose) throws BizException {
+	public List<AdminResourceVo> findUserResource(Long userId,Integer[] types,boolean dispose) throws BizException {
 
 		AdminUser adminUser = checkActionUserStatus(userId);
 
-		List<AdminResource> list;
+		List<AdminResourceVo> list;
 
 		if(adminUser.getIsAdmin() != null && adminUser.getIsAdmin()){
-			list = adminResourceRepository.findByTypeInOrderBySortAsc(types);
+			List<AdminResource> temp = adminResourceRepository.findByTypeInOrderBySortAsc(types);
+			list = new ArrayList<>();
+			for (AdminResource adminResource : temp) {
+				list.add(BeanTools.setPropertiesToBean(adminResource, AdminResourceVo.class));
+			}
 		}else{
 			Map<String, Object> param = new HashMap<>();
 			param.put("type", types);
@@ -154,6 +163,7 @@ public class BaseUserService implements Serializable{
 			param.put("userId", adminUser.getId());
 			list = authDao.findThisResourceByType(param);
 		}
+		
 		if(dispose)
 			return  initResource(list, 0L);
 		return list;
@@ -167,12 +177,16 @@ public class BaseUserService implements Serializable{
 	 * @return
 	 * @throws BizException 
 	 */
-	public List<AdminResource> findUserResource(AdminUser adminUser,Integer[] types,boolean dispose) throws BizException {
+	public List<AdminResourceVo> findUserResource(AdminUser adminUser,Integer[] types,boolean dispose) throws BizException {
 		
-		List<AdminResource> list;
+		List<AdminResourceVo> list;
 		
 		if(adminUser.getIsAdmin() != null && adminUser.getIsAdmin()){
-			list = adminResourceRepository.findByTypeInOrderBySortAsc(types);
+			List<AdminResource> temp = adminResourceRepository.findByTypeInOrderBySortAsc(types);
+			list = new ArrayList<>();
+			for (AdminResource adminResource : temp) {
+				list.add(BeanTools.setPropertiesToBean(adminResource, AdminResourceVo.class));
+			}
 		}else{
 			Map<String, Object> param = new HashMap<>();
 			param.put("type", types);
@@ -180,6 +194,7 @@ public class BaseUserService implements Serializable{
 			param.put("userId", adminUser.getId());
 			list = authDao.findThisResourceByType(param);
 		}
+		
 		if(dispose)
 			return  initResource(list, 0L);
 		return list;

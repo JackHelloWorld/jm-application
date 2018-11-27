@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultDic;
-import com.jm.sys.utils.Tools;
-import com.jm.user.entity.AdminRole;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultDic;
+import com.jm.common.utils.Tools;
 import com.jm.user.service.AdminRoleService;
+import com.jm.user.vo.AdminRoleVo;
 
 @RestController
 @RequestMapping("role")
@@ -26,7 +26,7 @@ public class RoleController extends BaseAdminController{
 	
 	@PostMapping("list")
 	public ResponseResult list(@RequestParam(value="pageSize",defaultValue="10")Integer pageSize,
-			@RequestParam(value="pageNumber",defaultValue="1")Integer pageNumber,AdminRole adminRole) throws Exception{
+			@RequestParam(value="pageNumber",defaultValue="1")Integer pageNumber,AdminRoleVo adminRole) throws Exception{
 
 		return adminRoleService.list(pageNumber,pageSize,adminRole);
 	}
@@ -40,7 +40,7 @@ public class RoleController extends BaseAdminController{
 	}
 	
 	@PostMapping("save")
-	public ResponseResult save(AdminRole adminRole) throws Exception{
+	public ResponseResult save(AdminRoleVo adminRole) throws Exception{
 		return adminRoleService.save(adminRole,getUser());
 	}
 	
@@ -52,7 +52,7 @@ public class RoleController extends BaseAdminController{
 	}
 	
 	@PostMapping("update")
-	public ResponseResult update(AdminRole adminRole) throws Exception{
+	public ResponseResult update(AdminRoleVo adminRole) throws Exception{
 		return adminRoleService.update(adminRole,getUser());
 	}
 	

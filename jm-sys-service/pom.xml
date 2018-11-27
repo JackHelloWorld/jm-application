@@ -14,7 +14,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.jm</groupId>
-			<artifactId>jm-message-service</artifactId>
+			<artifactId>jm-common</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 	</dependencies>

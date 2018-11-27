@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.data.ResponseResult;
 import com.jm.message.service.MessageService;
 import com.jm.message.vo.MessageVo;
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.data.ResponseResult;
 
 @RestController
 @RequestMapping("test")

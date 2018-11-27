@@ -2,7 +2,7 @@ package com.jm.user.vo;
 
 import java.io.Serializable;
 
-import com.jm.sys.annotation.ValidateEdit;
+import com.jm.common.annotation.ValidateEdit;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

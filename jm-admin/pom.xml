@@ -24,12 +24,13 @@
 		</dependency>
 		<dependency>
 			<groupId>com.jm</groupId>
-			<artifactId>jm-sys-service</artifactId>
+			<artifactId>jm-log-service</artifactId>
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.boot </groupId>
-			<artifactId>spring-boot-starter-thymeleaf </artifactId>
+			<groupId>com.jm</groupId>
+			<artifactId>jm-sys-service</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 

@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.exception.BizException;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.exception.BizException;
 import com.jm.user.service.AdminRoleService;
 import com.jm.user.service.UserService;
 import com.jm.user.vo.AdminUserVo;

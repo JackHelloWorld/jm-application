@@ -4,8 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.jm.user.entity.AdminResource;
-import com.jm.user.entity.AdminUser;
+import com.jm.user.vo.AdminResourceVo;
+import com.jm.user.vo.AdminUserDbVo;
+
 
 @Service
 public class AuthService {
@@ -16,15 +17,15 @@ public class AuthService {
 	 * @param url
 	 * @return
 	 */
-	public boolean validate(AdminUser adminUser,String url) {
+	public boolean validate(AdminUserDbVo adminUser,String url) {
 		
 		if(adminUser.getIsAdmin() != null && adminUser.getIsAdmin()) 
 			return true;
 		
-		List<AdminResource> adminResources = adminUser.getAdminResources();
+		List<AdminResourceVo> adminResources = adminUser.getAdminResources();
 		
 		if(adminResources != null){
-			for (AdminResource adminResource : adminResources) {
+			for (AdminResourceVo adminResource : adminResources) {
 				if(url.trim().equals(adminResource.getUrl()))
 					return true;
 			}

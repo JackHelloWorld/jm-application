@@ -19,15 +19,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
-import com.jm.sys.utils.PageBean;
-import com.jm.sys.utils.Tools;
-import com.jm.sys.utils.VerifyCodeUtils;
-import com.jm.user.entity.AdminUser;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.utils.ControllerUtils;
+import com.jm.common.utils.PageBean;
+import com.jm.common.utils.Tools;
+import com.jm.common.utils.VerifyCodeUtils;
 import com.jm.user.service.UserService;
+import com.jm.user.vo.AdminUserDbVo;
 import com.jm.user.vo.AdminUserLoginVo;
 import com.jm.user.vo.AdminUserProfileVo;
 import com.jm.user.vo.UpdatePasswordVo;
@@ -87,7 +88,7 @@ public class UserController extends BaseAdminController{
 
 	@ValidateIgnoreLogin
 	@PostMapping("login")
-	public ResponseResult login(AdminUserLoginVo adminUserLoginVo) throws Exception{
+	public ResponseResult login(AdminUserLoginVo adminUserLoginVo,HttpServletRequest request) throws Exception{
 
 		if(Tools.isEmpty(adminUserLoginVo.getSession_key()))
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "验证码输入错误,或已过期");
@@ -100,11 +101,11 @@ public class UserController extends BaseAdminController{
 		if(!verCode.trim().equalsIgnoreCase(adminUserLoginVo.getCode()))
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "验证码输入错误");
 		
-		adminUserLoginVo.setIp(getIpAddress());
+		adminUserLoginVo.setIp(ControllerUtils.getIpAddress(request));
 		
 		ResponseResult responseResult =  userService.login(adminUserLoginVo);
 		if(responseResult.getStatus()){
-			AdminUser adminUser = (AdminUser) responseResult.getData();
+			AdminUserDbVo adminUser = (AdminUserDbVo) responseResult.getData();
 			String token = Tools.MD5(adminUser.getId().toString(), System.currentTimeMillis()+"");
 			adminUser.setToken(token);
 			redisTemplate.opsForValue().set(token, adminUser, loginTimeout, TimeUnit.MINUTES);

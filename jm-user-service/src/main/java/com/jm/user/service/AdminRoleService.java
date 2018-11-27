@@ -2,10 +2,10 @@ package com.jm.user.service;
 
 import java.util.List;
 
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.exception.BizException;
-import com.jm.user.entity.AdminRole;
-import com.jm.user.entity.AdminUser;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.exception.BizException;
+import com.jm.user.vo.AdminRoleVo;
+import com.jm.user.vo.AdminUserDbVo;
 
 /**
  * 角色模块
@@ -18,7 +18,7 @@ public interface AdminRoleService {
 	 * 获取所以角色信息
 	 * @return
 	 */
-	public List<AdminRole> findAllRoles();
+	public List<AdminRoleVo> findAllRoles();
 
 	/**
 	 * 获得角色信息列表
@@ -27,7 +27,7 @@ public interface AdminRoleService {
 	 * @param adminRole
 	 * @return
 	 */
-	public ResponseResult list(Integer pageNumber, Integer pageSize, AdminRole adminRole) throws Exception;
+	public ResponseResult list(Integer pageNumber, Integer pageSize, AdminRoleVo adminRole) throws Exception;
 
 	/**
 	 * 获取角色信息
@@ -42,7 +42,7 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult save(AdminRole adminRole, AdminUser user) throws Exception;
+	public ResponseResult save(AdminRoleVo adminRole, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 删除角色信息
@@ -50,7 +50,7 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult delete(Long id, AdminUser user) throws Exception;
+	public ResponseResult delete(Long id, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 修改角色信息
@@ -58,7 +58,7 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult update(AdminRole adminRole, AdminUser user) throws Exception;
+	public ResponseResult update(AdminRoleVo adminRole, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 根据角色id获取角色资源
@@ -66,7 +66,7 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult findResource(Long id, AdminUser user) throws Exception;
+	public ResponseResult findResource(Long id, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 角色资源授权
@@ -75,7 +75,7 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult resource(Long id, String[] ids, AdminUser user) throws Exception;
+	public ResponseResult resource(Long id, String[] ids, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 启用角色信息
@@ -84,7 +84,7 @@ public interface AdminRoleService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ResponseResult success(Long id, AdminUser user) throws Exception;
+	public ResponseResult success(Long id, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 禁用角色信息
@@ -93,7 +93,7 @@ public interface AdminRoleService {
 	 * @return
 	 * @throws Exception
 	 */
-	public ResponseResult block(Long id, AdminUser user) throws Exception;
+	public ResponseResult block(Long id, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 用户资源授权
@@ -102,6 +102,6 @@ public interface AdminRoleService {
 	 * @param user 操作人信息
 	 * @return
 	 */
-	public ResponseResult resourceUser(Long userId, String[] ids, AdminUser user)  throws BizException;
+	public ResponseResult resourceUser(Long userId, String[] ids, AdminUserDbVo user)  throws BizException;
 	
 }

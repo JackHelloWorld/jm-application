@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.jm.user.entity.AdminResource;
+import com.jm.user.vo.AdminResourceVo;
 
 
 public interface AuthDao {
@@ -21,12 +21,12 @@ public interface AuthDao {
 	 * @param param {roleId:角色id,parentId:父id,type:类型集合}
 	 * @return
 	 */
-	List<AdminResource> findRoleResourceByType(Map<String, Object> param);
+	List<AdminResourceVo> findRoleResourceByType(Map<String, Object> param);
 
 	/**
 	 * 获取用户资源信息
 	 * @param param {roleId:角色id,parentId:父id,type:类型集合,userId : 用户id}
 	 * @return
 	 */
-	List<AdminResource> findThisResourceByType(Map<String, Object> param);
+	List<AdminResourceVo> findThisResourceByType(Map<String, Object> param);
 }

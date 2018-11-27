@@ -14,10 +14,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jm.admin.utils.ThreadData;
-import com.jm.sys.annotation.ValidateIgnoreLogin;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultDic;
-import com.jm.user.entity.AdminUser;
+import com.jm.common.annotation.ValidateIgnoreLogin;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultDic;
+import com.jm.user.vo.AdminUserDbVo;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,7 +61,7 @@ public class UserInterceptor implements HandlerInterceptor{
 
 				log.info("login-token:{}",token);
 
-				AdminUser adminUser = (AdminUser) redisTemplate.opsForValue().get(token);
+				AdminUserDbVo adminUser = (AdminUserDbVo) redisTemplate.opsForValue().get(token);
 
 				if(adminUser == null)
 					ResponseResult.ERROR(ResultDic.NOT_LOGIN).throwBizException();

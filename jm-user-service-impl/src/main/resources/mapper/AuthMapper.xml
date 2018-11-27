@@ -3,7 +3,7 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jm.user.mybatis.AuthDao">
 
-	<resultMap type="com.jm.user.entity.AdminResource" id="resourceMap">
+	<resultMap type="com.jm.user.vo.AdminResourceVo" id="resourceMap">
 		<result column="id" property="id" javaType="java.lang.Long" />
 		<result column="r_intro" property="intro" javaType="java.lang.String" />
 		<result column="r_style" property="style" javaType="java.lang.String"/>

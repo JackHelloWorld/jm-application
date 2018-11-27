@@ -1,7 +1,7 @@
 package com.jm.sys.service;
 
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.entity.Dictionary;
+import com.jm.common.data.ResponseResult;
+import com.jm.sys.vo.DictionaryVo;
 
 /**
  * 字典服务
@@ -21,14 +21,14 @@ public interface DictionaryService {
 	 * @param dictionary 字典信息
 	 * @return
 	 */
-	public ResponseResult save(Dictionary dictionary) throws Exception;
+	public ResponseResult save(DictionaryVo dictionary) throws Exception;
 
 	/**
 	 * 修改字典信息
 	 * @param dictionary 字典信息
 	 * @return
 	 */
-	public ResponseResult update(Dictionary dictionary) throws Exception;
+	public ResponseResult update(DictionaryVo dictionary) throws Exception;
 
 	/**
 	 * 删除字典信息

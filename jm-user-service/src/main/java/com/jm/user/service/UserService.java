@@ -1,9 +1,9 @@
 package com.jm.user.service;
 
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.exception.BizException;
-import com.jm.sys.utils.PageBean;
-import com.jm.user.entity.AdminUser;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.exception.BizException;
+import com.jm.common.utils.PageBean;
+import com.jm.user.vo.AdminUserDbVo;
 import com.jm.user.vo.AdminUserLoginVo;
 import com.jm.user.vo.AdminUserProfileVo;
 import com.jm.user.vo.AdminUserVo;
@@ -74,7 +74,7 @@ public interface UserService {
 	 * @param id 用户id
 	 * @return 用户信息
 	 */
-	public AdminUser findInfoById(Long id) throws BizException;
+	public AdminUserDbVo findInfoById(Long id) throws BizException;
 
 	/**
 	 * 获取指定用户的资源信息
@@ -82,14 +82,14 @@ public interface UserService {
 	 * @param user 操作员信息
 	 * @return
 	 */
-	public ResponseResult findUserResource(Long id, AdminUser user) throws BizException;
+	public ResponseResult findUserResource(Long id, AdminUserDbVo user) throws BizException;
 
 	/**
 	 * 获取指定用户的登录次数
 	 * @param adminUser 用户信息
 	 * @return
 	 */
-	public ResponseResult countLogininfo(AdminUser adminUser);
+	public ResponseResult countLogininfo(AdminUserDbVo adminUser);
 
 	/**
 	 * 获取指定用户的登录记录
@@ -98,7 +98,7 @@ public interface UserService {
 	 * @param adminUser 用户信息
 	 * @return
 	 */
-	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUser user) throws Exception;
+	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUserDbVo user) throws Exception;
 
 	/**
 	 * 修改用户资料
@@ -120,7 +120,7 @@ public interface UserService {
 	 * @param user
 	 * @return
 	 */
-	public ResponseResult updateProfile(String profile, AdminUser user) throws BizException;
+	public ResponseResult updateProfile(String profile, AdminUserDbVo user) throws BizException;
 
 	
 }

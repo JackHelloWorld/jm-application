@@ -7,23 +7,24 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
-import com.jm.sys.exception.BizException;
-import com.jm.sys.exception.NoException;
-import com.jm.sys.exception.ParamException;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.exception.BizException;
+import com.jm.common.exception.NoException;
+import com.jm.common.exception.ParamException;
+import com.jm.common.utils.AnnotationUtils;
+import com.jm.common.utils.BeanTools;
+import com.jm.common.utils.PageBean;
+import com.jm.common.utils.PageQuery;
+import com.jm.common.utils.PageUtils;
+import com.jm.common.utils.Tools;
 import com.jm.sys.service.BaseService;
-import com.jm.sys.utils.AnnotationUtils;
-import com.jm.sys.utils.PageBean;
-import com.jm.sys.utils.PageQuery;
-import com.jm.sys.utils.PageUtils;
-import com.jm.sys.utils.Tools;
-import com.jm.user.entity.AdminResource;
 import com.jm.user.entity.AdminRole;
 import com.jm.user.entity.AdminUser;
 import com.jm.user.entity.AdminUserLoginLog;
@@ -36,6 +37,9 @@ import com.jm.user.repository.AdminUserRepository;
 import com.jm.user.repository.AdminUserStatusRecordRepository;
 import com.jm.user.service.UserService;
 import com.jm.user.service.utils.BaseUserService;
+import com.jm.user.vo.AdminResourceVo;
+import com.jm.user.vo.AdminUserDbVo;
+import com.jm.user.vo.AdminUserLoginLogVo;
 import com.jm.user.vo.AdminUserLoginVo;
 import com.jm.user.vo.AdminUserProfileVo;
 import com.jm.user.vo.AdminUserVo;
@@ -274,14 +278,14 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		adminUserLoginLog.setLoginIp(adminUserLoginVo.getIp());
 		adminUserLoginLog.setUserId(adminUser.getId());
 
-		List<AdminResource> list = findUserResource(adminUser, new Integer[]{0,1}, false);
+		List<AdminResourceVo> list = findUserResource(adminUser, new Integer[]{0,1}, false);
 
 		//加载资源信息
 		adminUser.setAdminResources(list);
 
 		adminUserLoginLogRepository.save(adminUserLoginLog);
 		adminUserRepository.save(adminUser);
-		return ResponseResult.SUCCESS("登录成功", adminUser);
+		return ResponseResult.SUCCESS("登录成功", BeanTools.setPropertiesToBean(adminUser, AdminUserDbVo.class));
 	}
 
 	@Override
@@ -293,18 +297,20 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 			public List<?> query() {
 				return listDao.webUserList(adminUserVo);
 			}
-		},AdminUser.class);
+		},AdminUserDbVo.class);
 		return pageBean;
 	}
 
 	@Override
-	public AdminUser findInfoById(Long id) throws BizException {
+	public AdminUserDbVo findInfoById(Long id) throws BizException {
 		AdminUser adminUser = checkActionUserStatus(id);
-		return adminUser;
+		AdminUserDbVo adminUserDbVo = new AdminUserDbVo();
+		BeanUtils.copyProperties(adminUser, adminUserDbVo);
+		return adminUserDbVo;
 	}
 
 	@Override
-	public ResponseResult findUserResource(Long id, AdminUser adminUser) throws BizException {
+	public ResponseResult findUserResource(Long id, AdminUserDbVo adminUser) throws BizException {
 		
 		checkActionUserStatus(adminUser);
 		
@@ -327,12 +333,12 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		//加载资源
 		Map<String, Object> param = new HashMap<>();
 		param.put("roleId", user.getRoleId());
-		List<AdminResource> adminResources = authDao.findRoleResourceByType(param);
+		List<AdminResourceVo> adminResources = authDao.findRoleResourceByType(param);
 		param.put("userId", user.getId());
-		List<AdminResource> userResources = authDao.findThisResourceByType(param);
+		List<AdminResourceVo> userResources = authDao.findThisResourceByType(param);
 		
-		for (AdminResource adminResource : adminResources) {
-			for (AdminResource userResource : userResources) {
+		for (AdminResourceVo adminResource : adminResources) {
+			for (AdminResourceVo userResource : userResources) {
 				if(adminResource.getId().equals(userResource.getId())){
 					adminResource.setOwn(true);
 					break;
@@ -340,12 +346,14 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 			}
 		}
 		
-		List<AdminResource> data = initResource(adminResources, 0L);
+		List<AdminResourceVo> data = initResource(adminResources, 0L);
 		return ResponseResult.SUCCESS("获取资源成功", data);
 	}
 
 	@Override
-	public ResponseResult countLogininfo(AdminUser adminUser) {
+	public ResponseResult countLogininfo(AdminUserDbVo adminUserVo) {
+		
+		AdminUser adminUser = BeanTools.setPropertiesToBean(adminUserVo, AdminUser.class);
 		
 		if(adminUser == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在");
@@ -356,10 +364,12 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 	}
 
 	@Override
-	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUser adminUser) throws Exception {
+	public PageBean findLogininfo(Integer pageNumber, Integer pageSize, AdminUserDbVo adminUserDbVo) throws Exception {
 		
-		if(adminUser == null)
+		if(adminUserDbVo == null)
 			ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在").throwBizException();
+		
+		AdminUser adminUser = BeanTools.setPropertiesToBean(adminUserDbVo, AdminUser.class);
 		
 		return PageUtils.query(pageNumber, pageSize, new PageQuery() {
 			
@@ -367,7 +377,7 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 			public List<?> query() {
 				return listDao.findLoginLog(adminUser.getId());
 			}
-		}, AdminUserLoginLog.class);
+		}, AdminUserLoginLogVo.class);
 	}
 
 	@Override
@@ -408,7 +418,7 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 	}
 
 	@Override
-	public ResponseResult updateProfile(String profile, AdminUser user) throws BizException {
+	public ResponseResult updateProfile(String profile, AdminUserDbVo user) throws BizException {
 		
 		AdminUser adminUser = checkActionUserStatus(user.getId());
 		

@@ -3,10 +3,10 @@ package com.jm.user.vo;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jm.sys.annotation.QueryConfig;
-import com.jm.sys.annotation.ValidateEdit;
-import com.jm.sys.annotation.QueryConfig.QueryType;
-import com.jm.sys.annotation.ValidateEdit.ValidateType;
+import com.jm.common.annotation.QueryConfig;
+import com.jm.common.annotation.QueryConfig.QueryType;
+import com.jm.common.annotation.ValidateEdit;
+import com.jm.common.annotation.ValidateEdit.ValidateType;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

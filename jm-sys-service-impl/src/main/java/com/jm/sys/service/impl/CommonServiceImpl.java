@@ -8,13 +8,13 @@ import javax.annotation.Resource;
 import org.jasypt.encryption.StringEncryptor;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.jm.sys.data.ConfigData;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
+import com.jm.common.data.ConfigData;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.utils.Tools;
 import com.jm.sys.entity.Address;
 import com.jm.sys.repository.AddressRepository;
 import com.jm.sys.service.CommonService;
-import com.jm.sys.utils.Tools;
 import com.jm.sys.vo.FileVo;
 
 

@@ -11,14 +11,14 @@ import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.jm.sys.data.SerialNumberNoConfig;
-import com.jm.sys.entity.Dictionary;
+import com.jm.common.data.SerialNumberNoConfig;
+import com.jm.common.utils.DatePattern;
+import com.jm.common.utils.FtpUtils;
+import com.jm.common.utils.Tools;
 import com.jm.sys.entity.SerialNumber;
 import com.jm.sys.repository.SerialNumberRepository;
 import com.jm.sys.service.BaseService;
-import com.jm.sys.utils.DatePattern;
-import com.jm.sys.utils.FtpUtils;
-import com.jm.sys.utils.Tools;
+import com.jm.sys.vo.DictionaryVo;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -56,12 +56,12 @@ public class BaseServiceImpl implements BaseService{
 	}
 	
 	
-	public List<Dictionary> initDictionary(List<Dictionary> dictionaries,String parentToken){
-		List<Dictionary> nodes = new ArrayList<>();
-		for (Dictionary dictionary : dictionaries) {
+	public List<DictionaryVo> initDictionary(List<DictionaryVo> dictionaries,String parentToken){
+		List<DictionaryVo> nodes = new ArrayList<>();
+		for (DictionaryVo dictionary : dictionaries) {
 			if(dictionary.getParentToken().equals(parentToken)){
 				nodes.add(dictionary);
-				List<Dictionary> myNodes = initDictionary(dictionaries,dictionary.getToken());
+				List<DictionaryVo> myNodes = initDictionary(dictionaries,dictionary.getToken());
 				dictionary.setNodes(myNodes);
 			}
 		}

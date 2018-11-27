@@ -21,9 +21,7 @@ public class MessageServiceImpl implements MessageService{
 
 	@Override
 	public void sendMessage(MessageVo messageVo) {
-		
 		kafkaTemplate.send(messageVo.getTopic(), messageVo.getKey(), messageVo.getData());
-		
 	}
 	
 	

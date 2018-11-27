@@ -2,8 +2,8 @@ package com.jm.sys.service;
 
 import java.util.List;
 
-import com.jm.sys.data.SerialNumberNoConfig;
-import com.jm.sys.entity.Dictionary;
+import com.jm.common.data.SerialNumberNoConfig;
+import com.jm.sys.vo.DictionaryVo;
 
 public interface BaseService {
 
@@ -27,6 +27,6 @@ public interface BaseService {
 	 * @param parentToken
 	 * @return
 	 */
-	public List<Dictionary> initDictionary(List<Dictionary> dictionaries,String parentToken);
+	public List<DictionaryVo> initDictionary(List<DictionaryVo> dictionaries,String parentToken);
 	
 }

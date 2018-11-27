@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jm.admin.utils.BaseAdminController;
-import com.jm.sys.annotation.ValidateAuth;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.entity.Dictionary;
+import com.jm.common.annotation.ValidateAuth;
+import com.jm.common.data.ResponseResult;
 import com.jm.sys.service.DictionaryService;
+import com.jm.sys.vo.DictionaryVo;
 
 @RestController
 @RequestMapping("dictionary")
@@ -28,12 +28,12 @@ public class DictionaryController extends BaseAdminController{
 	}
 	
 	@PostMapping("save")
-	public ResponseResult save(Dictionary dictionary) throws Exception{
+	public ResponseResult save(DictionaryVo dictionary) throws Exception{
 		return dictionaryService.save(dictionary);
 	}
 	
 	@PostMapping("update")
-	public ResponseResult update(Dictionary dictionary) throws Exception{
+	public ResponseResult update(DictionaryVo dictionary) throws Exception{
 		return dictionaryService.update(dictionary);
 	}
 	

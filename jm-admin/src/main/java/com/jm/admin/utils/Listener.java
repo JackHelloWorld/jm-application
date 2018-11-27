@@ -14,4 +14,5 @@ public class Listener {
         log.info("kafka的value: {}", record.value().toString());
     }
 	
+	
 }

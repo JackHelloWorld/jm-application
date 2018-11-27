@@ -1,5 +1,6 @@
 package com.jm.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,16 +13,17 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.jm.sys.data.ResponseResult;
-import com.jm.sys.data.ResultCode;
-import com.jm.sys.exception.BizException;
-import com.jm.sys.exception.NoException;
-import com.jm.sys.exception.ParamException;
-import com.jm.sys.utils.AnnotationUtils;
-import com.jm.sys.utils.PageBean;
-import com.jm.sys.utils.PageQuery;
-import com.jm.sys.utils.PageUtils;
-import com.jm.sys.utils.Tools;
+import com.jm.common.data.ResponseResult;
+import com.jm.common.data.ResultCode;
+import com.jm.common.exception.BizException;
+import com.jm.common.exception.NoException;
+import com.jm.common.exception.ParamException;
+import com.jm.common.utils.AnnotationUtils;
+import com.jm.common.utils.BeanTools;
+import com.jm.common.utils.PageBean;
+import com.jm.common.utils.PageQuery;
+import com.jm.common.utils.PageUtils;
+import com.jm.common.utils.Tools;
 import com.jm.user.entity.AdminResource;
 import com.jm.user.entity.AdminResourceRole;
 import com.jm.user.entity.AdminResourceUser;
@@ -36,6 +38,9 @@ import com.jm.user.repository.AdminRoleRepository;
 import com.jm.user.repository.AdminUserRepository;
 import com.jm.user.service.AdminRoleService;
 import com.jm.user.service.utils.BaseUserService;
+import com.jm.user.vo.AdminResourceVo;
+import com.jm.user.vo.AdminRoleVo;
+import com.jm.user.vo.AdminUserDbVo;
 
 @Service(timeout=60000)
 @Transactional(rollbackFor=Exception.class)
@@ -65,19 +70,24 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 	AdminUserRepository adminUserRepository;
 
 	@Override
-	public List<AdminRole> findAllRoles() {
-		return adminRoleRepository.findByStatusOrderByCreateTimeDesc(0);
+	public List<AdminRoleVo> findAllRoles() {
+		List<AdminRole> adminRoles = adminRoleRepository.findByStatusOrderByCreateTimeDesc(0);
+		List<AdminRoleVo> adminRoleVos = new ArrayList<AdminRoleVo>();
+		for (AdminRole adminRole : adminRoles) {
+			adminRoleVos.add(BeanTools.setPropertiesToBean(adminRole, AdminRoleVo.class));
+		}
+		return adminRoleVos;
 	}
 
-	public ResponseResult list(Integer pageNumber, Integer pageSize, AdminRole adminRole) throws Exception {
+	public ResponseResult list(Integer pageNumber, Integer pageSize, AdminRoleVo adminRoleVo) throws Exception {
 
-		AnnotationUtils.paramQuery(adminRole);
-
+		AnnotationUtils.paramQuery(adminRoleVo);
+		
 		PageBean pageBean = PageUtils.query(pageNumber, pageSize, new PageQuery() {
 
 			@Override
 			public List<?> query() {
-				List<Map<String, Object>> list = listDao.roleList(adminRole);
+				List<Map<String, Object>> list = listDao.roleList(BeanTools.setPropertiesToBean(adminRoleVo, AdminRole.class));
 				return list;
 			}
 		},AdminRole.class);
@@ -91,7 +101,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		return ResponseResult.SUCCESS(adminRole);
 	}
 
-	public ResponseResult update(AdminRole adminRole,AdminUser adminUser) throws BizException, ParamException, NoException {
+	public ResponseResult update(AdminRoleVo adminRole,AdminUserDbVo adminUser) throws BizException, ParamException, NoException {
 
 		checkActionUserStatus(adminUser.getId());
 
@@ -104,14 +114,14 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 
 		if(adminRoleRepository.countByNameAndStatusNotAndIdNot(adminRole.getName().trim(),2,db.getId()) > 0)
 			ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "角色名称不能重复").throwBizException();
-
+		
 		db.setName(adminRole.getName().trim());
 		db.setRemark(adminRole.getRemark());
 		adminRoleRepository.save(db);
 		return ResponseResult.SUCCESS();
 	}
 
-	public ResponseResult delete(Long id,AdminUser adminUser) throws BizException {
+	public ResponseResult delete(Long id,AdminUserDbVo adminUser) throws BizException {
 
 		checkActionUserStatus(adminUser.getId());
 
@@ -128,15 +138,17 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		return ResponseResult.SUCCESS();
 	}
 
-	public ResponseResult save(AdminRole adminRole,AdminUser adminUser) throws Exception {
+	public ResponseResult save(AdminRoleVo adminRoleVo,AdminUserDbVo adminUserDbVo) throws Exception {
 
-		checkActionUserStatus(adminUser.getId());
+		checkActionUserStatus(adminUserDbVo.getId());
 
-		AnnotationUtils.validateEdit(adminRole);
+		AnnotationUtils.validateEdit(adminRoleVo);
+		
+		AdminRole adminRole = BeanTools.setPropertiesToBean(adminRoleVo, AdminRole.class);
 
 		adminRole.setCreateTime(new Date());
 		adminRole.setName(adminRole.getName().trim());
-		adminRole.setCreateUserId(adminUser.getId());
+		adminRole.setCreateUserId(adminUserDbVo.getId());
 		adminRole.setStatus(0);
 		long countByName = adminRoleRepository.countByNameAndStatusNot(adminRole.getName(),2);
 		if(countByName > 0)
@@ -145,16 +157,20 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		return ResponseResult.SUCCESS();
 	}
 
-	public ResponseResult findResource(Long id,AdminUser adminUser) throws BizException {
+	public ResponseResult findResource(Long id,AdminUserDbVo adminUser) throws BizException {
 
 		checkActionUserStatus(adminUser.getId());
 
-		List<AdminResource> adminResources = adminResourceRepository.findAll(new Sort(Direction.ASC, "sort"));
+		List<AdminResource> all = adminResourceRepository.findAll(new Sort(Direction.ASC, "sort"));
+		List<AdminResourceVo> adminResources = new ArrayList<>();
+		for (AdminResource adminResource : all) {
+			adminResources.add(BeanTools.setPropertiesToBean(adminResource, AdminResourceVo.class));
+		}
 		Map<String, Object> param = new HashMap<>();
 		param.put("roleId", id);
-		List<AdminResource> resources = authDao.findRoleResourceByType(param);
-		for (AdminResource adminResource : adminResources) {
-			for (AdminResource node : resources) {
+		List<AdminResourceVo> resources = authDao.findRoleResourceByType(param);
+		for (AdminResourceVo adminResource : adminResources) {
+			for (AdminResourceVo node : resources) {
 				if(node.getId().equals(adminResource.getId())){
 					adminResource.setOwn(true);
 					break;
@@ -164,7 +180,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 		return ResponseResult.SUCCESS(initResource(adminResources, 0L));
 	}
 
-	public ResponseResult resource(Long roleId, String[] ids, AdminUser adminUser) throws BizException {
+	public ResponseResult resource(Long roleId, String[] ids, AdminUserDbVo adminUser) throws BizException {
 
 		checkActionUserStatus(adminUser.getId());
 
@@ -198,7 +214,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 	}
 
 	@Override
-	public ResponseResult success(Long id, AdminUser user) throws Exception {
+	public ResponseResult success(Long id, AdminUserDbVo user) throws Exception {
 		checkActionUserStatus(user.getId());
 
 		AdminRole adminRole = adminRoleRepository.findTop1ByIdAndStatusNot(id, 2);
@@ -221,7 +237,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 	}
 
 	@Override
-	public ResponseResult block(Long id, AdminUser user) throws Exception {
+	public ResponseResult block(Long id, AdminUserDbVo user) throws Exception {
 		checkActionUserStatus(user.getId());
 
 		AdminRole adminRole = adminRoleRepository.findTop1ByIdAndStatusNot(id, 2);
@@ -244,7 +260,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 	}
 
 	@Override
-	public ResponseResult resourceUser(Long userId, String[] ids, AdminUser adminUser) throws BizException {
+	public ResponseResult resourceUser(Long userId, String[] ids, AdminUserDbVo adminUser) throws BizException {
 
 		checkActionUserStatus(adminUser.getId());
 

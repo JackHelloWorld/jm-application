@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ProtocolConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
-import com.jm.sys.data.ConfigData;
+import com.jm.common.data.ConfigData;
 
 @Configuration
 public class DubboConfiguration {
