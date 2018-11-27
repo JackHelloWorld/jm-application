@@ -7,7 +7,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * 权限验证配置
+ * 查询列名配置
  * @author Jack
  *
  */
