@@ -2,12 +2,9 @@ package com.jm.sys.vo;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import com.jm.common.annotation.QueryColumn;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,16 +16,13 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="sys_serial_number")
 public class SerialNumberVo implements Serializable{
 
 	private static final long serialVersionUID = 2988989312275381148L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	
 	public SerialNumberVo(String columnName) {
@@ -36,7 +30,7 @@ public class SerialNumberVo implements Serializable{
 	}
 
 	/**列名*/
-	@Column(name="f_column_name")
+	@QueryColumn("f_column_name")
 	private String columnName;
 
 }

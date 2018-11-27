@@ -3,13 +3,12 @@ package com.jm.user.vo;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.jm.common.annotation.QueryColumn;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,10 +20,8 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="admin_resource")
 public class AdminResourceVo implements Serializable{
 
 	private static final long serialVersionUID = 7794669285253606814L;
@@ -34,46 +31,46 @@ public class AdminResourceVo implements Serializable{
 	private Long id;
 
 	/**资源名称*/
-	@Column(name="r_text")
+	@QueryColumn("r_text")
 	private String text;
 	
 	/**资源简介*/
-	@Column(name="r_intro")
+	@QueryColumn("r_intro")
 	private String intro;
 	
 	/**资源样式*/
-	@Column(name="r_style")
+	@QueryColumn("r_style")
 	private String style;
 	
 	/**事件函数*/
-	@Column(name="r_click")
+	@QueryColumn("r_click")
 	private String clickAction;
 	
 	/**图标*/
-	@Column(name="r_icon")
+	@QueryColumn("r_icon")
 	private String icon;
 	
 	/**排序*/
-	@Column(name="r_sort")
+	@QueryColumn("r_sort")
 	private Integer sort;
 	
 	/**资源类型{0:菜单,1:按钮}*/
-	@Column(name="r_type")
+	@QueryColumn("r_type")
 	private Integer type;
 	
 	/**url*/
-	@Column(name="r_url")
+	@QueryColumn("r_url")
 	private String url;
 	
 	/**是否为管理员操作,{0:否,1:是}*/
-	@Column(name="r_is_admin",columnDefinition="INT default 0")
+	@QueryColumn("r_is_admin")
 	private Integer isAdmin;
 	
 	@Transient
 	private boolean own;
 	
 	/**父级id,0为顶级*/
-	@Column(name="parent_id")
+	@QueryColumn("parent_id")
 	private Long parentId;
 	
 	/**子节点信息*/

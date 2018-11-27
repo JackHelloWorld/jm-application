@@ -6,10 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Column;
-
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jm.common.annotation.QueryColumn;
 
 public class PageUtils {
 
@@ -46,9 +45,9 @@ public class PageUtils {
 			if(map.containsKey(field.getName())){
 				field.set(temp, map.get(field.getName()));
 			}else{
-				Column column = field.getAnnotation(Column.class);
-				if(column != null && map.containsKey(column.name())){
-					field.set(temp, map.get(column.name()));
+				QueryColumn column = field.getAnnotation(QueryColumn.class);
+				if(column != null && map.containsKey(column.value())){
+					field.set(temp, map.get(column.value()));
 				}
 			}
 		}

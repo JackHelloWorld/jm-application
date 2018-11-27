@@ -2,14 +2,12 @@ package com.jm.user.vo;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.jm.common.annotation.QueryColumn;
 import com.jm.common.annotation.QueryConfig;
 import com.jm.common.annotation.QueryConfig.QueryType;
 import com.jm.common.annotation.ValidateEdit;
@@ -25,10 +23,8 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="admin_role")
 public class AdminRoleVo implements java.io.Serializable{
 
 	private static final long serialVersionUID = 8487218668365987190L;
@@ -39,21 +35,21 @@ public class AdminRoleVo implements java.io.Serializable{
 	
 	@QueryConfig(QueryType.LIKEBOTH)
 	@ValidateEdit(type=ValidateType.NULL,message="请输入角色名称")
-	@Column(name="r_name")
+	@QueryColumn("r_name")
 	private String name;
 	
 	@QueryConfig(QueryType.LIKEBOTH)
-	@Column(name="r_remark")
+	@QueryColumn("r_remark")
 	private String remark;
 	
-	@Column(name="create_time")
+	@QueryColumn("create_time")
 	private Date createTime;
 	
-	@Column(name="create_user_id")
+	@QueryColumn("create_user_id")
 	private Long createUserId;
 	
 	/**状态:{0:正常,1:停用,2:删除}*/
-	@Column(name="r_status")
+	@QueryColumn("r_status")
 	private Integer status;
 	
 	@Transient

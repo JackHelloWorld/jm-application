@@ -3,12 +3,11 @@ package com.jm.user.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import com.jm.common.annotation.QueryColumn;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,10 +19,8 @@ import lombok.NoArgsConstructor;
  *
  */
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="admin_resource_role")
 public class AdminResourceRoleVo implements Serializable{
 
 	private static final long serialVersionUID = -4303765635628600857L;
@@ -33,19 +30,19 @@ public class AdminResourceRoleVo implements Serializable{
 	private Long id;
 	
 	/**角色id*/
-	@Column(name="role_id")
+	@QueryColumn("role_id")
 	private Long roleId;
 	
 	/**资源id*/
-	@Column(name="resource_id")
+	@QueryColumn("resource_id")
 	private Long resourceId;
 	
 	/**创建时间*/
-	@Column(name="create_time")
+	@QueryColumn("create_time")
 	private Date createTime;
 	
 	/**授权操作人*/
-	@Column(name="create_user")
+	@QueryColumn("create_user")
 	private Long createUser;
 
 }

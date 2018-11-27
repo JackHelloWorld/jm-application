@@ -3,12 +3,11 @@ package com.jm.user.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
+
+import com.jm.common.annotation.QueryColumn;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,10 +18,8 @@ import lombok.NoArgsConstructor;
  * @author jack
  */
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="admin_user_status_record")
 public class AdminUserStatusRecordVo implements Serializable{
 	
 	private static final long serialVersionUID = -7101017553115688539L;
@@ -32,23 +29,23 @@ public class AdminUserStatusRecordVo implements Serializable{
 	private Long id;
 	
 	/**用户id*/
-	@Column(name="admin_user_id")
+	@QueryColumn("admin_user_id")
 	private Long adminUserId;
 	
 	/**操作人*/
-	@Column(name="create_user_id")
+	@QueryColumn("create_user_id")
 	private Long createUserId;
 	
 	/**操作时间*/
-	@Column(name="create_time")
+	@QueryColumn("create_time")
 	private Date createTime;
 	
 	/**原状态*/
-	@Column(name="old_status")
+	@QueryColumn("old_status")
 	private Integer oldStatus;
 	
 	/**当前状态*/
-	@Column(name="new_status")
+	@QueryColumn("new_status")
 	private Integer newStatus;
 	
 }
