@@ -1,21 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.jm</groupId>
+	<groupId>com.jmsoft</groupId>
 	<artifactId>jm-application</artifactId>
 	<version>1.0.0</version>
 	<packaging>pom</packaging>
 	<modules>
-		<module>jm-admin</module>
-		<module>jm-sys-service</module>
-		<module>jm-sys-service-impl</module>
-		<module>jm-user-service</module>
-		<module>jm-user-service-impl</module>
-		<module>jm-message-service-impl</module>
-		<module>jm-message-service</module>
-		<module>jm-log-service-impl</module>
-		<module>jm-log-service</module>
-		<module>jm-common</module>
+		<module>jmsoft-admin</module>
+		<module>jmsoft-sys-service</module>
+		<module>jmsoft-sys-service-impl</module>
+		<module>jmsoft-user-service</module>
+		<module>jmsoft-user-service-impl</module>
+		<module>jmsoft-message-service-impl</module>
+		<module>jmsoft-message-service</module>
+		<module>jmsoft-log-service-impl</module>
+		<module>jmsoft-log-service</module>
+		<module>jmsoft-common</module>
 	</modules>
 
 	<properties>
