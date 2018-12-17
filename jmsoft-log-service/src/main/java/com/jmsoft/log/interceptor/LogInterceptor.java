@@ -80,6 +80,7 @@ public class LogInterceptor implements HandlerInterceptor{
 			requestInfo.setRequestUrl(request.getRequestURI());
 			
 			logService.info(JSONObject.toJSONString(requestInfo));
+			
 		}
 		return true;
 	}

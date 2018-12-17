@@ -29,3 +29,13 @@ strong {
     height: 0;
     clear: both;
 }
+
+.card-title{
+	font-weight: bold;
+	font-family:'PingFang SC';
+	font-size: 15px;
+}
+
+.el-table .selected-row {
+	background: #f0f9eb;
+}

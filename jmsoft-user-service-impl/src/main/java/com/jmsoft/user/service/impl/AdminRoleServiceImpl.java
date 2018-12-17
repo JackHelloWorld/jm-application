@@ -90,7 +90,7 @@ public class AdminRoleServiceImpl  extends BaseUserService implements AdminRoleS
 				List<Map<String, Object>> list = listDao.roleList(BeanTools.setPropertiesToBean(adminRoleVo, AdminRole.class));
 				return list;
 			}
-		},AdminRole.class);
+		},AdminRoleVo.class);
 		return ResponseResult.SUCCESS(pageBean);
 	}
 
