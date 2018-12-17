@@ -32,6 +32,7 @@
 		methods : {
 			actionclick(clickAttr){
 				if(this.This){
+					console.log(clickAttr);
 					this.This[clickAttr]();
 				}else{
 					console.error("Missing attribute value:This")

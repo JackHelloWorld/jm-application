@@ -31,7 +31,7 @@
 				<el-table :data="page.list" style="width: 100%" @current-change="handleCurrentChange" border>
 					<el-table-column prop="id" label="角色名称">
 						<template slot-scope="scope">
-							<el-radio v-model="selectId" :label="scope.row.id">{{ scope.row.name }}</el-radio>
+							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.name }}</el-radio>
 						</template>
 					</el-table-column>
 					<el-table-column prop="remark" label="备注信息">
@@ -47,9 +47,28 @@
 						</template>
 					</el-table-column>
 				</el-table>
-
+				<Pagination :page="page" queryMethod="pageQuery" :This="this" :queryData="queryData" />
 			</div>
 		</el-card>
+
+
+		<!-- 编辑窗口 -->
+		<el-dialog :title="editModal.title" :close-on-click-modal="false" :visible.sync="editModal.show" left>
+			<el-form ref="form" :model="form" label-width="80px">
+				<el-form-item label="角色名称" prop="name" :rules="[{ required: true, message: '角色名称不能为空'}]">
+					<el-input v-model="form.name" placeholder="请输入角色名称">
+					</el-input>
+				</el-form-item>
+				<el-form-item label="角色描述" prop="remark" :rules="[{ required: true, message: '角色描述不能为空'}]">
+					<el-input v-model="form.remark" placeholder="请输入角色描述"></el-input>
+				</el-form-item>
+			</el-form>
+
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="editModal.show = false">取 消</el-button>
+				<el-button type="primary" @click="formSubmit('form')">确 定</el-button>
+			</span>
+		</el-dialog>
 
 	</div>
 </template>
@@ -59,15 +78,27 @@
 	import httpUtils from '../utils/httpUtils.js';
 	import apiConfig from '../utils/ApiConfig.js';
 	import tools from '../utils/Tools.js';
+	import Pagination from './Pagination.vue';
 
 	export default {
 		data() {
 			return {
 				loading: true,
-				page: {
-					list: []
+				editModal: {
+					show: false,
+					title: '',
+					type: 0, //类型:1:保存,2:修改
+					loading: false
 				},
-				selectId: null,
+				page: {
+					list: [],
+					navigatepageNums: []
+				},
+				form: {
+					remark: '',
+					name: '',
+				},
+				selectRow: {id:null},
 				queryData: {
 					name: '',
 					remark: '',
@@ -77,7 +108,8 @@
 			}
 		},
 		components: {
-			'Actions': Actions
+			'Actions': Actions,
+			'Pagination': Pagination
 		},
 		mounted: function() {
 			this.loading = false;
@@ -86,10 +118,10 @@
 		methods: {
 			handleCurrentChange(row) { //点击行选择
 				if (row)
-					this.selectId = row.id;
+					this.selectRow = row;
 			},
 			isSelectItem() { //检查是否已选择行
-				return this.selectId != null && this.selectId != '';
+				return this.selectRow != null && this.selectRow.id;
 			},
 			findList() {
 				const self = this;
@@ -104,10 +136,69 @@
 				});
 
 			},
+			pageQuery() {
+				this.page.list = [];
+				this.findList();
+			},
 			query() {
 				this.queryData.pageNumber = 1;
 				this.page.list = [];
 				this.findList();
+			},
+			addInfo() {
+				this.form = {
+					remark: '',
+					name: '',
+				};
+				this.editModal.title = '新增角色';
+				this.editModal.type = 1;
+				this.editModal.show = true;
+			},
+			formSubmit(formName) {
+
+				this.$refs[formName].validate((valid) => {
+					if (valid) {
+						var url = null;
+						if (this.editModal.type == 1) {
+							url = apiConfig.role.save;
+						} else if (this.editModal.type == 2) {
+							url = apiConfig.role.update;
+						}
+
+						if (this.editModal.loading)
+							return;
+
+						this.editModal.loading = true;
+
+						const loading = this.$loading({
+							lock: true,
+							text: '操作中,请稍后',
+							spinner: 'el-icon-loading',
+							background: 'rgba(0, 0, 0, 0.3)'
+						});
+
+						var self = this;
+						httpUtils.This(this).paramPost(url, this.form, (data) => {
+							loading.close();
+							this.editModal.loading = false;
+							this.$message({
+								message: '操作成功',
+								type: 'success'
+							});
+							this.query();
+							this.editModal.show = false;
+						}, (err) => {
+							loading.close();
+							this.$message.error(err.msg);
+							self.editModal.loading = false;
+						}, function() {
+							loading.close();
+							self.editModal.loading = false;
+						});
+					} else {
+						return false;
+					}
+				});
 			}
 		}
 	}
