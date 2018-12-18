@@ -18,9 +18,14 @@ import com.jmsoft.sys.service.CommonService;
 import com.jmsoft.sys.vo.FileVo;
 import com.jmsoft.user.service.UserService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 
 @RestController
 @RequestMapping("common")
+@Api(description = "公共服务接口",tags="公共")
 public class CommonController extends BaseAdminController{
 
 	private static final long serialVersionUID = 5036497442165052656L;
@@ -31,9 +36,10 @@ public class CommonController extends BaseAdminController{
 	@Reference
 	UserService userService;
 	
+	@ApiOperation("获取字典数据")
 	@PostMapping("/get/address")
 	@ValidateAuth(validate=false)
-	public ResponseResult address(@RequestParam(value="parent_code",defaultValue="0")String parentCode){
+	public ResponseResult address(@ApiParam(name="parent_code",value="父级code",defaultValue="0") @RequestParam(value="parent_code",defaultValue="0")String parentCode){
 		return commonService.findAddress(parentCode);
 	}
 	
@@ -44,8 +50,9 @@ public class CommonController extends BaseAdminController{
 	 * @throws Exception 
 	 */
 	@ValidateIgnoreLogin
+	@ApiOperation("上传图片")
 	@PostMapping("upload/img")
-	public ResponseResult uploadImg(@RequestParam(value="file",required=false) MultipartFile file) throws Exception{
+	public ResponseResult uploadImg(@ApiParam(name="file",required=true,value="图片文件",allowMultiple=true) @RequestParam(value="file",required=false) MultipartFile file) throws Exception{
 		
 		if(file == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "未选择图片");
@@ -65,7 +72,9 @@ public class CommonController extends BaseAdminController{
 	 * @throws Exception 
 	 */
 	@ValidateIgnoreLogin
+	@ApiOperation("上传文件")
 	@PostMapping("upload/file")
+	@ApiParam(name="file",required=true,value="文件数据",allowMultiple=true)
 	public ResponseResult uploadFile(@RequestParam(value="file",required=false) MultipartFile file) throws Exception{
 		
 		if(file == null)
@@ -87,9 +96,10 @@ public class CommonController extends BaseAdminController{
 	 * @throws BizException 
 	 * @throws Exception 
 	 */
+	@ApiOperation("修改头像")
 	@ValidateAuth(validate=false)
 	@PostMapping("update_profile")
-	public ResponseResult updateProfile(@RequestParam(value="profile",defaultValue="") String profile) throws BizException{
+	public ResponseResult updateProfile(@ApiParam(name="profile",value="头像路径") @RequestParam(value="profile",defaultValue="") String profile) throws BizException{
 		return userService.updateProfile(profile,getUser());
 		
 	}

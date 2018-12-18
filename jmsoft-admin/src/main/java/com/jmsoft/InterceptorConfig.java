@@ -1,4 +1,4 @@
-package com.jmsoft.admin.utils;
+package com.jmsoft;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,8 +23,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(userInterceptor()).excludePathPatterns("/error");
-		registry.addInterceptor(userAuthInterceptor()).excludePathPatterns("/error");
+		registry.addInterceptor(userInterceptor()).excludePathPatterns("/error","/swagger*","/swagger-resources/**");
+		registry.addInterceptor(userAuthInterceptor()).excludePathPatterns("/error","/swagger*","/swagger-resources/**");
 	}
 
 }

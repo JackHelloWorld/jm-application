@@ -15,8 +15,13 @@ import com.jmsoft.common.exception.BizException;
 import com.jmsoft.user.service.AdminResourceService;
 import com.jmsoft.user.vo.AdminResourceVo;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+
 @RestController
 @RequestMapping("home")
+@Api(description="主页服务",tags="主服务")
 public class HomeController extends BaseAdminController{
 
 	private static final long serialVersionUID = 2284182118629887224L;
@@ -26,6 +31,7 @@ public class HomeController extends BaseAdminController{
 	
 	@PostMapping("find/menus")
 	@ValidateAuth(validate=false)
+	@ApiOperation(value="获取菜单",notes="只会返回当前登录用户菜单")
 	public ResponseResult findMenus() throws BizException{
 		List<AdminResourceVo> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{0}, true);
 		return ResponseResult.SUCCESS("获取菜单成功",adminResources);
@@ -33,7 +39,8 @@ public class HomeController extends BaseAdminController{
 	
 	@PostMapping("find/action")
 	@ValidateAuth(validate=false)
-	public ResponseResult findAction(@RequestParam(value="parent_id",defaultValue="0") Long parentId) throws BizException{
+	@ApiOperation(value="获取功能信息",notes="获取指定菜单下的功能")
+	public ResponseResult findAction(@ApiParam(required=true,value="菜单id",defaultValue="0") @RequestParam(value="parent_id",defaultValue="0") Long parentId) throws BizException{
 		List<AdminResourceVo> adminResources = adminResourceService.findUserResource(getUser().getId(), new Integer[]{1}, parentId,false);
 		return ResponseResult.SUCCESS("获取功能资源成功",adminResources);
 	}

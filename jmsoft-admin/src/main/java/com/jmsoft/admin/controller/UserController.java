@@ -26,11 +26,15 @@ import com.jmsoft.user.vo.AdminUserLoginVo;
 import com.jmsoft.user.vo.AdminUserProfileVo;
 import com.jmsoft.user.vo.UpdatePasswordVo;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("user")
+@Api(description="用户相关服务",tags="用户模块")
 public class UserController extends BaseAdminController{
 
 	private static final long serialVersionUID = -7714059355046808702L;
@@ -51,7 +55,8 @@ public class UserController extends BaseAdminController{
 
 	@ValidateIgnoreLogin
 	@PostMapping("login")
-	public ResponseResult login(AdminUserLoginVo adminUserLoginVo,HttpServletRequest request) throws Exception{
+	@ApiOperation(value="用户登录")
+	public ResponseResult login(AdminUserLoginVo adminUserLoginVo,@ApiParam(hidden=true) HttpServletRequest request) throws Exception{
 		
 		adminUserLoginVo.setIp(ControllerUtils.getIpAddress(request));
 		
@@ -69,6 +74,7 @@ public class UserController extends BaseAdminController{
 	
 	@PostMapping("logout")
 	@ValidateAuth(validate=false)
+	@ApiOperation("退出登录")
 	public ResponseResult logout(){
 		String token = getUser().getToken();
 		redisTemplate.delete(token);
@@ -77,25 +83,36 @@ public class UserController extends BaseAdminController{
 	
 	@PostMapping("count/logininfo")
 	@ValidateAuth(validate=false)
+	@ApiOperation("统计登录次数")
 	public ResponseResult countLogininfo(){
 		return userService.countLogininfo(getUser());
 	}
 	
 	@PostMapping("find/logininfo")
 	@ValidateAuth(validate=false)
-	public ResponseResult findLogininfo(@RequestParam(value="pageNumber",defaultValue="1") Integer pageNumber,
-			@RequestParam(value="pageSize",defaultValue="10") Integer pageSize) throws Exception{
+	@ApiOperation("获取登录记录")
+	public ResponseResult findLogininfo(@ApiParam(defaultValue="1",value="页码") @RequestParam(value="pageNumber",defaultValue="1") Integer pageNumber,
+			@ApiParam(defaultValue="10",value="页大小")	@RequestParam(value="pageSize",defaultValue="10") Integer pageSize) throws Exception{
 		PageBean pageBean = userService.findLogininfo(pageNumber,pageSize,getUser());
 		return ResponseResult.SUCCESS("获取登录记录成功", pageBean);
 	}
 	
-	@PostMapping("update/profile")
+	@PostMapping("update")
 	@ValidateAuth(validate=false)
+	@ApiOperation("修改个人信息")
 	public ResponseResult update(AdminUserProfileVo adminUserProfileVo) throws Exception{
 		adminUserProfileVo.setId(getUser().getId());
 		return userService.updateInfo(adminUserProfileVo);
 	}
 	
+	@PostMapping("update/profile")
+	@ValidateAuth(validate=false)
+	@ApiOperation("上传头像")
+	public ResponseResult updateProfile(@ApiParam(required=true,value="头像路径") @RequestParam(value="profile",defaultValue="") String profile) throws Exception{
+		return userService.updateProfile(profile,getUser());
+	}
+	
+	@ApiOperation("修改密码")
 	@PostMapping("update/password")
 	@ValidateAuth(validate=false)
 	public ResponseResult updatePassword(UpdatePasswordVo updatePasswordVo) throws Exception{

@@ -47,6 +47,7 @@ public class UserInterceptor implements HandlerInterceptor{
 
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response, Object handler) throws Exception {
 
+		
 		if(handler instanceof HandlerMethod){
 
 			HandlerMethod handlerMethod = (HandlerMethod) handler;

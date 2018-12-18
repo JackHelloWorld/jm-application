@@ -6,6 +6,7 @@ import com.jmsoft.common.exception.BizException;
 import com.jmsoft.common.exception.NoException;
 import com.jmsoft.common.exception.ParamException;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -21,16 +22,20 @@ public final class ResponseResult implements Serializable{
 
 	private static final long serialVersionUID = 2012087081741204962L;
 	
+	@ApiModelProperty(value="返回结果消息",required=true)
 	/**结果提示信息取值字符*/
 	private String msg;
 	
 	/**结果编码取值字符--详情见ResultDic.class*/
+	@ApiModelProperty(value="返回结果编码",required=true)
 	private Integer code;
 	
 	/**结果附带数据取值字符*/
+	@ApiModelProperty(value="返回结果数据")
 	private Object data;
 	
 	/**结果状态*/
+	@ApiModelProperty(value="是否成功\n {true:成功,false:失败}",required=true)
 	private Boolean status;
 	
 	/**

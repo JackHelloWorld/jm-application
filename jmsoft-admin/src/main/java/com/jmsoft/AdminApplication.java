@@ -1,6 +1,5 @@
 package com.jmsoft;
 
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -13,11 +12,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
-import com.jmsoft.admin.utils.Listener;
 
 @EnableRedisHttpSession
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
-@MapperScan("com.jmsoft.admin.mybatis")
 @DubboComponentScan(basePackages = "com.jmsoft")
 public class AdminApplication {
 
@@ -41,11 +38,5 @@ public class AdminApplication {
 		bean.setOrder(0);
 		return bean;
 	}
-
-    
-    @Bean
-    public Listener listener() {
-        return new Listener();
-    }
     
 }
