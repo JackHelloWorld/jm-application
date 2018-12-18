@@ -111,7 +111,7 @@
 			calcSize();
 
 			//加载菜单
-			httpUtils.This(self).paramPost(apiConfig.getMenus, {}, (data) => {
+			httpUtils.paramPost(apiConfig.getMenus, {}, (data) => {
 				this.fullscreenLoading = false;
 				//储存地址映射
 				var list = [];
@@ -148,7 +148,7 @@
 				this.viewData.title = result.title;
 				if(this.$route.query.menuId) {
 					//加载功能信息
-					httpUtils.This(self).paramPost(apiConfig.getAction, {
+					httpUtils.paramPost(apiConfig.getAction, {
 						parent_id: this.$route.query.menuId
 					}, (data) => {
 						vueEvent.$emit('actions', data.data);

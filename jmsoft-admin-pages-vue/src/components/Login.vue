@@ -62,7 +62,7 @@ import cacheUtils from '../utils/CacheUtils.js';
 					return;
 				}
 				self.loading = true;
-				httpUtils.This(self).paramPost(apiConfig.login, self.loginInfo, (data) => {
+				httpUtils.paramPost(apiConfig.login, self.loginInfo, (data) => {
 					cacheUtils.setUserInfo(data.data);
 					cacheUtils.setToken(data.data.token);
 					self.$router.push("/index");

@@ -98,7 +98,9 @@
 					remark: '',
 					name: '',
 				},
-				selectRow: {id:null},
+				selectRow: {
+					id: null
+				},
 				queryData: {
 					name: '',
 					remark: '',
@@ -120,12 +122,21 @@
 				if (row)
 					this.selectRow = row;
 			},
-			isSelectItem() { //检查是否已选择行
-				return this.selectRow != null && this.selectRow.id;
+			isSelectItem(action, msg) { //检查是否已选择行
+				if (!msg) msg = '请选择需要操作的项';
+				var t = this.selectRow != null && this.selectRow.id;
+				if (!t) {
+					this.$message({
+						message: msg,
+						type: 'warning'
+					});
+					return;
+				}
+				action(this.selectRow);
 			},
 			findList() {
 				const self = this;
-				httpUtils.This(this).paramPost(apiConfig.role.list, this.queryData, (data) => {
+				httpUtils.paramPost(apiConfig.role.list, this.queryData, (data) => {
 					tools.pageUtils(this.page, data.data);
 					this.loading = false;
 				}, (err) => {
@@ -154,6 +165,98 @@
 				this.editModal.type = 1;
 				this.editModal.show = true;
 			},
+			editInfo() {
+				this.isSelectItem((row) => {
+						this.form = row;
+						delete this.form.createTime;
+						this.editModal.title = '修改角色';
+						this.editModal.type = 2;
+						this.editModal.show = true;
+				},'请选择需要修改的信息');
+			},
+			success() {
+				this.isSelectItem((row) => {
+						
+				this.$confirm('将启用选中角色, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+					
+					httpUtils.paramPost(apiConfig.role.success,{id:row.id},(data)=>{
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+						this.query();
+					},(err)=>{
+						this.$message.error(err.msg);
+					});
+					
+				}).catch(() => {
+					
+				});
+					
+				},'请选择需要启用的信息');
+			},	
+			blockInfo() {
+				this.isSelectItem((row) => {
+						
+				this.$confirm('将停用选中角色, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+					
+					httpUtils.paramPost(apiConfig.role.block,{id:row.id},(data)=>{
+						this.query();
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+					},(err)=>{
+						this.$message.error(err.msg);
+					});
+					
+				}).catch(() => {
+					
+				});
+					
+				},'请选择需要停用的信息');
+			},
+			deleteInfo() {
+				this.isSelectItem((row) => {
+						
+				this.$confirm('将删除选中角色并且无法恢复, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+					
+					httpUtils.paramPost(apiConfig.role.deleteInfo,{id:row.id},(data)=>{
+						this.query();
+						this.$message({
+							message: '操作成功',
+							type: 'success'
+						});
+					},(err)=>{
+						this.$message.error(err.msg);
+					});
+					
+				}).catch(() => {
+					
+				});
+					
+				},'请选择需要删除的信息');
+			},
+			resourceClick() {
+				this.isSelectItem((row) => {
+					
+					
+					
+					
+				},'请选择需要授权的信息');
+			},
 			formSubmit(formName) {
 
 				this.$refs[formName].validate((valid) => {
@@ -178,7 +281,7 @@
 						});
 
 						var self = this;
-						httpUtils.This(this).paramPost(url, this.form, (data) => {
+						httpUtils.paramPost(url, this.form, (data) => {
 							loading.close();
 							this.editModal.loading = false;
 							this.$message({
