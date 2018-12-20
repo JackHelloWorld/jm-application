@@ -43,10 +43,12 @@ public class DictionaryServiceImpl extends BaseServiceImpl implements Dictionary
 
 	public ResponseResult save(DictionaryVo dictionaryVo) throws Exception {
 		Dictionary dictionary = new Dictionary();
+		dictionaryVo.setId(null);
 		BeanUtils.copyProperties(dictionaryVo, dictionary);
-		dictionary.setId(null);
-		validateInfo(dictionary);
+		validateInfo(dictionaryVo);
 		dictionary.setStatus(0);
+		if(Tools.isEmpty(dictionary.getParentToken()))
+			dictionary.setParentToken("0");
 		dictionaryRepository.save(dictionary);
 		return ResponseResult.SUCCESS();
 	}
@@ -61,14 +63,16 @@ public class DictionaryServiceImpl extends BaseServiceImpl implements Dictionary
 		if(dictionaryRepository.countByIdAndStatus(dictionary.getId(),0)==0)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "信息不存在");
 
-		validateInfo(dictionary);
+		validateInfo(dictionaryVo);
 		
 		dictionary.setStatus(0);
+		Dictionary dictionary2 = dictionaryRepository.findTop1ByIdAndStatus(dictionary.getId(), 0);
+		dictionary.setParentToken(dictionary2.getParentToken());
 		dictionaryRepository.save(dictionary);
 		return ResponseResult.SUCCESS();
 	}
 
-	private void validateInfo(Dictionary dictionary) throws BizException, ParamException, NoException{
+	private void validateInfo(DictionaryVo dictionary) throws BizException, ParamException, NoException{
 
 		AnnotationUtils.validateEdit(dictionary);
 

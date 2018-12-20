@@ -1,5 +1,5 @@
 <template>
-	<div id="role" v-loading="loading">
+	<div id="webuser" v-loading="loading">
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
 				<span class="card-title">操作栏</span>
@@ -7,11 +7,17 @@
 			<el-row>
 				<el-col :span="24">
 					<el-form :inline="true" class="demo-form-inline">
-						<el-form-item label="角色名称">
-							<el-input v-model="queryData.name" placeholder="角色名称"></el-input>
+						<el-form-item label="用户昵称">
+							<el-input v-model="queryData.nickName" placeholder="用户昵称"></el-input>
 						</el-form-item>
-						<el-form-item label="角色备注">
-							<el-input v-model="queryData.remark" placeholder="角色备注"></el-input>
+						<el-form-item label="登录名">
+							<el-input v-model="queryData.loginName" placeholder="登录名"></el-input>
+						</el-form-item>
+						<el-form-item label="角色">
+							<el-input v-model="queryData.roleName" placeholder="角色"></el-input>
+						</el-form-item>
+						<el-form-item label="电话">
+							<el-input v-model="queryData.phone" placeholder="电话"></el-input>
 						</el-form-item>
 					</el-form>
 				</el-col>
@@ -23,22 +29,28 @@
 
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span class="card-title">角色列表</span>
+				<span class="card-title">用户列表</span>
 			</div>
 
 			<div>
 
 				<el-table :data="page.list" style="width: 100%" @current-change="handleCurrentChange" border>
-					<el-table-column prop="id" label="角色名称">
+					<el-table-column prop="id" label="用户名称">
 						<template slot-scope="scope">
-							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.name }}</el-radio>
+							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.nickName }}</el-radio>
 						</template>
 					</el-table-column>
-					<el-table-column prop="remark" label="备注信息">
+					<el-table-column prop="loginName" label="登录名">
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间">
+					<el-table-column prop="roleName" label="角色">
 					</el-table-column>
-					<el-table-column prop="createUserName" label="创建人">
+					<el-table-column prop="phone" label="电话">
+					</el-table-column>
+					<el-table-column prop="adminDesc" label="描述">
+					</el-table-column>
+					<el-table-column prop="createtime" label="创建时间">
+					</el-table-column>
+					<el-table-column prop="lastLoginTime" label="最后一次登录时间">
 					</el-table-column>
 					<el-table-column prop="status" label="状态">
 						<template slot-scope="scope">
@@ -55,12 +67,27 @@
 		<!-- 编辑窗口 -->
 		<el-dialog :title="editModal.title" :close-on-click-modal="false" :visible.sync="editModal.show" left>
 			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item label="角色名称" prop="name" :rules="[{ required: true, message: '角色名称不能为空'}]">
-					<el-input v-model="form.name" placeholder="请输入角色名称">
+				<el-form-item label="登录名" prop="loginName" :rules="[{ required: true, message: '登录名不能为空'}]">
+					<el-input :disabled="form.edit" v-model="form.loginName" placeholder="请输入登录名">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="角色描述" prop="remark" :rules="[{ required: true, message: '角色描述不能为空'}]">
-					<el-input v-model="form.remark" placeholder="请输入角色描述"></el-input>
+				<el-form-item label="用户名" prop="nickName" :rules="[{ required: true, message: '用户名不能为空'}]">
+					<el-input v-model="form.nickName" placeholder="请输入用户名"></el-input>
+				</el-form-item>
+				<el-form-item label="电话">
+					<el-input v-model="form.phone" placeholder="请输入电话"></el-input>
+				</el-form-item>
+				<el-form-item label="角色">
+					<el-select v-model="form.roleId" placeholder="请选择" style="width: 100%;">
+						<el-option
+						  v-for="item in editModal.roles"
+						  :key="item.id"
+						  :label="item.name"
+						  :value="item.id">
+						</el-option>
+					</el-select>
+					
+					
 				</el-form-item>
 			</el-form>
 
@@ -71,7 +98,7 @@
 		</el-dialog>
 
 		<!-- 授权窗口 -->
-		<el-dialog title="角色授权" width="430px" :close-on-click-modal="false" :visible.sync="resourceModal.show" left>
+		<el-dialog title="用户授权" width="430px" :close-on-click-modal="false" :visible.sync="resourceModal.show" left>
 			<el-row>
 				<el-col :span="24">
 					<el-tree ref="tree" :data="resourceModal.data" show-checkbox default-expand-all node-key="id" :default-checked-keys="resourceModal.selectData" :expand-on-click-node="false"
@@ -115,22 +142,30 @@
 					show: false,
 					title: '',
 					type: 0, //类型:1:保存,2:修改
-					loading: false
+					loading: false,
+					roles : []
 				},
 				page: {
 					list: [],
 					navigatepageNums: []
 				},
 				form: {
-					remark: '',
-					name: '',
+					edit : false,
+					nickName : '',
+					loginName : '',
+					roleName : '',
+					adminDesc : '',
+					roleId : '',
+					phone : ''
 				},
 				selectRow: {
 					id: null
 				},
 				queryData: {
-					name: '',
-					remark: '',
+					nickName: '',
+					loginName: '',
+					roleName: '',
+					phone: '',
 					pageSize: 10,
 					pageNumber: 1,
 				}
@@ -139,12 +174,6 @@
 		components: {
 			'Actions': Actions,
 			'Pagination': Pagination
-		},
-		mounted: function() {
-			this.query();
-			setTimeout(function(){
-				this.loading = false;
-			}, 2000);
 		},
 		methods: {
 			handleCurrentChange(row) { //点击行选择
@@ -162,7 +191,7 @@
 			},
 			findList() {
 				const self = this;
-				httpUtils.paramPost(apiConfig.role.list, this.queryData, (data) => {
+				httpUtils.paramPost(apiConfig.webuser.list, this.queryData, (data) => {
 					tools.pageUtils(this.page, data.data);
 					this.loading = false;
 				}, (err) => {
@@ -198,7 +227,7 @@
 				var halfKeys = this.$refs.tree.getHalfCheckedKeys();
 				halfKeys.push(...keys);
 				const loading = componentUtils.loading("授权中,请稍后...");
-				httpUtils.paramPost(apiConfig.role.resource,{id:this.selectRow.id,ids:halfKeys.join(",")},(data)=>{
+				httpUtils.paramPost(apiConfig.webuser.resource,{id:this.selectRow.id,ids:halfKeys.join(",")},(data)=>{
 					loading.close();
 					this.resourceModal.show = false;
 					componentUtils.message.success("授权成功");
@@ -209,20 +238,27 @@
 					loading.close();
 				});
 			},
-			addInfo() {
+			saveInfo() {
 				this.form = {
-					remark: '',
-					name: '',
+					edit : false,
+					nickName : '',
+					loginName : '',
+					roleName : '',
+					adminDesc : '',
+					roleId : '',
+					phone : ''
+					
 				};
-				this.editModal.title = '新增角色';
+				this.editModal.title = '新增用户';
 				this.editModal.type = 1;
 				this.editModal.show = true;
 			},
-			editInfo() {
+			updateInfo() {
 				this.isSelectItem((row) => {
 					this.form = row;
-					delete this.form.createTime;
-					this.editModal.title = '修改角色';
+					this.form.edit=true;
+					delete this.form.createtime;
+					this.editModal.title = '修改用户';
 					this.editModal.type = 2;
 					this.editModal.show = true;
 				}, '请选择需要修改的信息');
@@ -230,13 +266,13 @@
 			success() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将启用选中角色, 是否继续?', '提示', {
+					this.$confirm('将启用选中用户, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 
-						httpUtils.paramPost(apiConfig.role.success, {
+						httpUtils.paramPost(apiConfig.webuser.success, {
 							id: row.id
 						}, (data) => {
 							componentUtils.message.success('操作成功');
@@ -254,13 +290,13 @@
 			blockInfo() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将停用选中角色, 是否继续?', '提示', {
+					this.$confirm('将停用选中用户, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 
-						httpUtils.paramPost(apiConfig.role.block, {
+						httpUtils.paramPost(apiConfig.webuser.block, {
 							id: row.id
 						}, (data) => {
 							this.query();
@@ -278,13 +314,12 @@
 			deleteInfo() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将删除选中角色并且无法恢复, 是否继续?', '提示', {
+					this.$confirm('将删除选中用户并且无法恢复, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
-
-						httpUtils.paramPost(apiConfig.role.deleteInfo, {
+						httpUtils.paramPost(apiConfig.webuser.deleteInfo, {
 							id: row.id
 						}, (data) => {
 							this.query();
@@ -299,13 +334,13 @@
 
 				}, '请选择需要删除的信息');
 			},
-			resourceClick() {
+			resource() {
 				this.isSelectItem((row) => {
 					var loading = componentUtils.loading('加载授权中,请稍后...');
 					this.resourceModal.data = [];
 					this.resourceModal.selectData=[];
 					this.resourceModal.strictly = true;
-					httpUtils.paramPost(apiConfig.role.findResource, {
+					httpUtils.paramPost(apiConfig.webuser.findResource, {
 						id: row.id
 					}, (data) => {
 						loading.close();
@@ -330,9 +365,9 @@
 					if (valid) {
 						var url = null;
 						if (this.editModal.type == 1) {
-							url = apiConfig.role.save;
+							url = apiConfig.webuser.save;
 						} else if (this.editModal.type == 2) {
-							url = apiConfig.role.update;
+							url = apiConfig.webuser.update;
 						}
 
 						if (this.editModal.loading)
@@ -362,6 +397,15 @@
 					}
 				});
 			}
+		},
+		mounted : function(){
+			this.query();
+			httpUtils.paramPost(apiConfig.webuser.findRoles,{},(data)=>{
+				this.editModal.roles = data.data;
+				this.loading = false;
+			},(err)=>{
+				this.loading = false;
+			});
 		}
 	}
 </script>

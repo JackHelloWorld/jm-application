@@ -46,7 +46,7 @@ var ApiConfig = {
 	
 	/**resource.html*/
 	resource : {
-		findAllMenus : 'http://127.0.0.1:9999/resource/find',
+		findAllresources : 'http://127.0.0.1:9999/resource/find',
 		saveResource : 'http://127.0.0.1:9999/resource/save',
 		updateResource : 'http://127.0.0.1:9999/resource/update',
 		deleteResource : 'http://127.0.0.1:9999/resource/delete',
@@ -58,17 +58,6 @@ var ApiConfig = {
 		saveDictionary : 'http://127.0.0.1:9999/dictionary/save',
 		updateDictionary : 'http://127.0.0.1:9999/dictionary/update',
 		deleteDictionary : 'http://127.0.0.1:9999/dictionary/delete',
-	},
-	
-	/**organization.html*/
-	organization : {
-		findAllList : 'http://127.0.0.1:9999/organization/list',
-		findNoList : 'http://127.0.0.1:9999/organization/list_no',
-		save : 'http://127.0.0.1:9999/organization/save',
-		block : 'http://127.0.0.1:9999/organization/block',
-		success : 'http://127.0.0.1:9999/organization/using',
-		updateInfo : 'http://127.0.0.1:9999/organization/update',
-		deleteInfo : 'http://127.0.0.1:9999/organization/delete',
 	},
 	
 	/**role.html*/

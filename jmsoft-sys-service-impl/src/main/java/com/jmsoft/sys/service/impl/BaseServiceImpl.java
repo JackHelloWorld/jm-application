@@ -59,7 +59,7 @@ public class BaseServiceImpl implements BaseService{
 	public List<DictionaryVo> initDictionary(List<DictionaryVo> dictionaries,String parentToken){
 		List<DictionaryVo> nodes = new ArrayList<>();
 		for (DictionaryVo dictionary : dictionaries) {
-			if(dictionary.getParentToken().equals(parentToken)){
+			if(parentToken.equals(dictionary.getParentToken())){
 				nodes.add(dictionary);
 				List<DictionaryVo> myNodes = initDictionary(dictionaries,dictionary.getToken());
 				dictionary.setNodes(myNodes);

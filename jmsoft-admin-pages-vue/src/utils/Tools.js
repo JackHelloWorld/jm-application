@@ -29,6 +29,9 @@ export default {
 		}
 		
 		
+	},
+	isNull(obj){
+		return obj == null || obj == undefined || obj.toString().trim().length == 0
 	}
 	
 	

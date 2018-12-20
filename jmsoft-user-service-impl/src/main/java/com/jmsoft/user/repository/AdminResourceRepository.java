@@ -16,4 +16,6 @@ public interface AdminResourceRepository extends JpaRepository<AdminResource, Lo
 
 	long countById(Long parentId);
 
+	AdminResource findTop1ById(Long id);
+
 }

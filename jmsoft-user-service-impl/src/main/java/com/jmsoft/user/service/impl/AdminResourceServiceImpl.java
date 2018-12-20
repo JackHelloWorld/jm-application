@@ -100,17 +100,23 @@ public class AdminResourceServiceImpl extends BaseUserService implements AdminRe
 
 	@Override
 	public ResponseResult update(AdminResourceVo adminResourceVo,Long userId) throws Exception {
+
+		checkActionUserStatus(userId);
+		
+		
+		if(adminResourceVo.getId() == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息不存在");
+		
+		if(adminResourceRepository.countById(adminResourceVo.getId()) == 0)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息不存在");
+		
+		AdminResource aResource = adminResourceRepository.findTop1ById(adminResourceVo.getId());
+		adminResourceVo.setIsAdmin(aResource.getIsAdmin());
+		adminResourceVo.setParentId(aResource.getParentId());
 		
 		AdminResource adminResource = BeanTools.setPropertiesToBean(adminResourceVo, AdminResource.class);
 		
-		checkActionUserStatus(userId);
-		if(adminResource.getId() == null)
-			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息不存在");
-		
-		if(adminResourceRepository.countById(adminResource.getId()) == 0)
-			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "资源信息不存在");
-		
-		validateInfo(adminResource);
+		validateInfo(adminResourceVo);
 		adminResourceRepository.save(adminResource);
 		return ResponseResult.SUCCESS();
 		
@@ -119,16 +125,16 @@ public class AdminResourceServiceImpl extends BaseUserService implements AdminRe
 	@Override
 	public ResponseResult save(AdminResourceVo adminResourceVo,Long userId) throws Exception {
 		
+		adminResourceVo.setId(null);
 		AdminResource adminResource = BeanTools.setPropertiesToBean(adminResourceVo, AdminResource.class);
 		
 		checkActionUserStatus(userId);
-		adminResource.setId(null);
-		validateInfo(adminResource);
+		validateInfo(adminResourceVo);
 		adminResourceRepository.save(adminResource);
 		return ResponseResult.SUCCESS();
 	}
 	
-	private void validateInfo(AdminResource adminResource) throws ParamException, NoException, BizException{
+	private void validateInfo(AdminResourceVo adminResource) throws ParamException, NoException, BizException{
 		
 		AnnotationUtils.validateEdit(adminResource);
 		

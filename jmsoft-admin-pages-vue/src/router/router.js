@@ -8,8 +8,10 @@ Vue.use(VueRouter);
 import Home from '../components/Home.vue';
 import Index from '../components/Index.vue';
 import Login from '../components/Login.vue';
-import User from '../components/User.vue';
+import Webuser from '../components/Webuser.vue';
 import Role from '../components/Role.vue';
+import Resource from '../components/Resource.vue';
+import Dictionary from '../components/Dictionary.vue';
 
 import store from '../vuex/store.js';
 
@@ -21,8 +23,10 @@ const routes = [{
 		meta: {requireAuth: true},
 		children : [
 			{path: '',component: Home},
-			{path: 'user',component: User},
+			{path: 'webuser',component: Webuser},
 			{path: 'role',component: Role},
+			{path: 'resource',component: Resource},
+			{path: 'dictionary',component: Dictionary},
 		],
 	},
 	{

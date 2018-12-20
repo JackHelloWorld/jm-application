@@ -61,6 +61,7 @@
 	import httpUtils from '../utils/httpUtils.js';
 	import apiConfig from '../utils/ApiConfig.js';
 	import vueEvent from '../utils/VueEvent.js';
+	import tools from '../utils/Tools.js';
 
 	var self;
 
@@ -122,7 +123,7 @@
 				var url = href[href.length - 1].split("?")[0];
 				var t = true;
 				for(var i = 0; i < list.length; i++) {
-					if(url == '/index' + list[i].url) {
+					if(!tools.isNull(list[i].url) && url == ('/index' + list[i].url)) {
 						t = false;
 						vueEvent.$emit('defaultActive', list[i].index);
 						break;
