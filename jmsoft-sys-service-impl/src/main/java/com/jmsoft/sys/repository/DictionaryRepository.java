@@ -20,4 +20,8 @@ public interface DictionaryRepository extends JpaRepository<Dictionary, Long>{
 
 	Dictionary findTop1ByIdAndStatus(Long id, Integer status);
 
+	long countByParentTokenAndValueAndStatus(String parentToken, String value, Integer status);
+
+	List<Dictionary> findByParentTokenAndStatusOrderBySortAsc(String parentToken, Integer status);
+
 }

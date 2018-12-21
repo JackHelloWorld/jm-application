@@ -1,6 +1,6 @@
 <template>
 	<div id="Actions">
-		<el-button v-for="action in this.actions" :type="action.style" @click.native="actionclick(action.clickAction)">
+		<el-button :key="action.text" v-for="action in this.actions" :type="action.style" @click.native="actionclick(action.clickAction)">
 			<template>
 				<i :class="action.icon"></i>
 				<span v-html="action.text"></span>

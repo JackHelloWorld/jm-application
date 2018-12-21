@@ -37,4 +37,19 @@ public interface DictionaryService {
 	 */
 	public ResponseResult delete(String id) throws Exception;
 
+	/**
+	 * 检查值是否存在
+	 * @param value 值
+	 * @param parentToken 父级编码
+	 * @return
+	 */
+	public boolean checkValueAndParentToken(String value, String parentToken);
+
+	/**
+	 * 根据父级字典token获取字典集合
+	 * @param parentToken 父token
+	 * @return
+	 */
+	public ResponseResult findByParentToken(String parentToken);
+
 }

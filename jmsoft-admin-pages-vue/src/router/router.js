@@ -5,13 +5,14 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 //1.创建组件
-import Home from '../components/Home.vue';
-import Index from '../components/Index.vue';
-import Login from '../components/Login.vue';
-import Webuser from '../components/Webuser.vue';
-import Role from '../components/Role.vue';
-import Resource from '../components/Resource.vue';
-import Dictionary from '../components/Dictionary.vue';
+import Home from '../pages/Home.vue';
+import Index from '../pages/Index.vue';
+import Login from '../pages/Login.vue';
+import Webuser from '../pages/Webuser.vue';
+import Role from '../pages/Role.vue';
+import Resource from '../pages/Resource.vue';
+import Dictionary from '../pages/Dictionary.vue';
+import LoginUser from '../pages/LoginUser.vue';
 
 import store from '../vuex/store.js';
 
@@ -27,6 +28,7 @@ const routes = [{
 			{path: 'role',component: Role},
 			{path: 'resource',component: Resource},
 			{path: 'dictionary',component: Dictionary},
+			{path: 'loginuser',component: LoginUser},//用户管理
 		],
 	},
 	{

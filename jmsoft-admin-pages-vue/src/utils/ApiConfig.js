@@ -42,17 +42,18 @@ var ApiConfig = {
 		fileUpload : 'http://127.0.0.1:9999/common/upload/file',
 		//修改头像
 		updateImgProfile : 'http://127.0.0.1:9999/common/update_profile',
+		
+		//获取字典
+		findDic : 'http://127.0.0.1:9999/common/find_dic',
 	},
 	
-	/**resource.html*/
 	resource : {
 		findAllresources : 'http://127.0.0.1:9999/resource/find',
 		saveResource : 'http://127.0.0.1:9999/resource/save',
 		updateResource : 'http://127.0.0.1:9999/resource/update',
 		deleteResource : 'http://127.0.0.1:9999/resource/delete',
 	},
-	
-	/**dictionary.html*/
+
 	dictionary : {
 		findAllDictionary : 'http://127.0.0.1:9999/dictionary/find',
 		saveDictionary : 'http://127.0.0.1:9999/dictionary/save',
@@ -60,7 +61,6 @@ var ApiConfig = {
 		deleteDictionary : 'http://127.0.0.1:9999/dictionary/delete',
 	},
 	
-	/**role.html*/
 	role : {
 		list : 'http://127.0.0.1:9999/role/list',
 		updateInfo : 'http://127.0.0.1:9999/role/update/info',
@@ -75,7 +75,6 @@ var ApiConfig = {
 		findOrganization : 'http://127.0.0.1:9999/role/organization/find',
 	},
 	
-	/**webuser.html*/
 	webuser : {
 		list : 'http://127.0.0.1:9999/webuser/list',
 		resource : 'http://127.0.0.1:9999/webuser/resource',
@@ -89,6 +88,15 @@ var ApiConfig = {
 		success : 'http://127.0.0.1:9999/webuser/success',
 		organization : 'http://127.0.0.1:9999/webuser/organization',
 		findOrganization : 'http://127.0.0.1:9999/webuser/organization/find',
+	},
+	
+	loginUser : {
+		list : 'http://127.0.0.1:9999/loginuser/list',
+		update : 'http://127.0.0.1:9999/loginuser/update',
+		save : 'http://127.0.0.1:9999/loginuser/save',
+		deleteInfo : 'http://127.0.0.1:9999/loginuser/delete',
+		block : 'http://127.0.0.1:9999/loginuser/block',
+		success : 'http://127.0.0.1:9999/loginuser/success',
 	},
 	
 }

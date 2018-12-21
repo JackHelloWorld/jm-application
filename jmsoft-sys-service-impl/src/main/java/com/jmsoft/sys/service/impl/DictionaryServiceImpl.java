@@ -16,6 +16,7 @@ import com.jmsoft.common.exception.BizException;
 import com.jmsoft.common.exception.NoException;
 import com.jmsoft.common.exception.ParamException;
 import com.jmsoft.common.utils.AnnotationUtils;
+import com.jmsoft.common.utils.BeanTools;
 import com.jmsoft.common.utils.Tools;
 import com.jmsoft.sys.entity.Dictionary;
 import com.jmsoft.sys.repository.DictionaryRepository;
@@ -98,6 +99,24 @@ public class DictionaryServiceImpl extends BaseServiceImpl implements Dictionary
 		dictionary.setStatus(1);
 		dictionaryRepository.save(dictionary);
 		return ResponseResult.SUCCESS();
+	}
+
+	@Override
+	public boolean checkValueAndParentToken(String value, String parentToken) {
+		long count = dictionaryRepository.countByParentTokenAndValueAndStatus(parentToken,value, 0);
+		return count > 0;
+	}
+
+	@Override
+	public ResponseResult findByParentToken(String parentToken) {
+		
+		List<Dictionary> list = dictionaryRepository.findByParentTokenAndStatusOrderBySortAsc(parentToken,0);
+		List<DictionaryVo> dictionaryVos = new ArrayList<>();
+		for (Dictionary dictionary : list) {
+			dictionaryVos.add(BeanTools.setPropertiesToBean(dictionary, DictionaryVo.class));
+		}
+		
+		return ResponseResult.SUCCESS("字典获取成功",dictionaryVos);
 	}
 
 

@@ -15,6 +15,7 @@ import com.jmsoft.common.data.ResponseResult;
 import com.jmsoft.common.data.ResultCode;
 import com.jmsoft.common.exception.BizException;
 import com.jmsoft.sys.service.CommonService;
+import com.jmsoft.sys.service.DictionaryService;
 import com.jmsoft.sys.vo.FileVo;
 import com.jmsoft.user.service.UserService;
 
@@ -32,6 +33,9 @@ public class CommonController extends BaseAdminController{
 	
 	@Reference
 	CommonService commonService;
+	
+	@Reference
+	DictionaryService dictionaryService;
 	
 	@Reference
 	UserService userService;
@@ -102,6 +106,20 @@ public class CommonController extends BaseAdminController{
 	public ResponseResult updateProfile(@ApiParam(name="profile",value="头像路径") @RequestParam(value="profile",defaultValue="") String profile) throws BizException{
 		return userService.updateProfile(profile,getUser());
 		
+	}
+	
+	/**
+	 * 获取字典
+	 * @param file
+	 * @return
+	 * @throws BizException 
+	 * @throws Exception 
+	 */
+	@ApiOperation("获取字典")
+	@ValidateAuth(validate=false)
+	@PostMapping("find_dic")
+	public ResponseResult findDic(@ApiParam(name="parentToken",value="父级token",defaultValue="0") @RequestParam(value="parentToken",defaultValue="0") String parentToken) throws BizException{
+		return dictionaryService.findByParentToken(parentToken);
 	}
 	
 }
