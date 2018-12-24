@@ -1,4 +1,4 @@
-package com.jmsoft;
+package com.jmsoft.common.web;
 
 import javax.annotation.Resource;
 
@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import com.alibaba.dubbo.config.ApplicationConfig;
 import com.alibaba.dubbo.config.ConsumerConfig;
 import com.alibaba.dubbo.config.ProtocolConfig;
+import com.alibaba.dubbo.config.ProviderConfig;
 import com.alibaba.dubbo.config.RegistryConfig;
 import com.jmsoft.common.data.ConfigData;
 
@@ -24,12 +25,20 @@ public class DubboConfiguration {
 		applicationConfig.setQosPort(configData.dubboQosPort);
 		return applicationConfig;
 	}
-	
+
 	@Bean
 	public ConsumerConfig consumerConfig() {
 		ConsumerConfig consumerConfig = new ConsumerConfig();
 		consumerConfig.setTimeout(30000);
+		consumerConfig.setRetries(0);
 		return consumerConfig;
+	}
+	
+	@Bean
+	public ProviderConfig providerConfig(){
+		ProviderConfig providerConfig = new ProviderConfig();
+		providerConfig.setTimeout(6000);
+		return providerConfig;
 	}
 
 	@Bean
@@ -48,4 +57,5 @@ public class DubboConfiguration {
 		protocolConfig.setDefault(true);
 		return protocolConfig;
 	}
+
 }

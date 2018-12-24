@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jmsoft.equipment.mybatis.EquipmentDao">
+
+	<select id="pageList" resultType="hashMap" parameterType="com.jmsoft.equipment.vo.EquipmentVo">
+		SELECT
+			bet.*, aur.nick_name AS e_create_user_name,
+			lur_city.l_name AS e_city_user_name,
+			lur.l_name AS e_county_user_name
+		FROM
+			biz_equipment bet
+		INNER JOIN admin_user aur ON aur.id = bet.e_create_user_id
+		LEFT JOIN login_user lur_city ON lur_city.id = bet.e_city_user_id
+		LEFT JOIN login_user lur ON lur.id = bet.e_county_user_id
+		WHERE bet.e_status != 9
+		<if test="createUserName != null and createUserName != ''">
+			and aur.nick_name like #{createUserName}
+		</if>
+		<if test="status != null">
+			and bet.e_status = #{status}
+		</if>
+		<if test="address != null and address != ''">
+			and bet.e_address like #{address}
+		</if>
+		<if test="name != null and name != ''">
+			and bet.e_name like #{name}
+		</if>
+		<if test="remark != null and remark != ''">
+			and bet.e_remark like #{remark}
+		</if>
+		<if test="no != null and no != ''">
+			and bet.e_no like #{no}
+		</if>
+		<if test="countyUserName != null and countyUserName != ''">
+			and lur.l_name like #{countyUserName}
+		</if>
+		<if test="cityUserName != null and cityUserName != ''">
+			and lur_city.l_name like #{cityUserName}
+		</if>
+	</select>
+
+</mapper>

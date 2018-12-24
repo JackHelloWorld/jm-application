@@ -430,4 +430,10 @@ public class UserServiceImpl extends BaseUserService implements UserService {
 		return ResponseResult.SUCCESSM("头像修改成功");
 	}
 
+	@Override
+	public boolean checkUserStatus(Long createUserId) throws BizException {
+		AdminUser adminUser = checkActionUserStatus(createUserId);
+		return adminUser != null;
+	}
+
 }

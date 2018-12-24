@@ -70,6 +70,12 @@ public class LoginUserVo implements Serializable{
 	@ApiParam(hidden=true)
 	private String sexStr;
 	
+	/**状态,字符串*/
+	@QueryConfig
+	@QueryColumn("l_status_str")
+	@ApiParam(hidden=true)
+	private String statusStr;
+	
 	/**手机号*/
 	@QueryColumn("l_phone")
 	@QueryConfig(QueryType.LIKEBOTH)
@@ -116,5 +122,22 @@ public class LoginUserVo implements Serializable{
 	@QueryColumn("alipay_open_id")
 	private String alipayOpenId;
 	
+	/**类型{0:普通用户,1:商家,2:市级代理,3:县级代理}*/
+	@QueryColumn("user_type")
+	@ApiParam("类型{0:普通用户,1:商家,2:市级代理,3:县级代理}")
+	@ValidateEdit(type=ValidateType.NULL,message="类型无效")
+	private Integer userType;
+
+	@ApiParam(hidden=true)
+	@QueryColumn("user_type_str")
+	private String userTypeStr;
 	
+	@QueryColumn("bank_name")
+	@ApiParam("开户行名称,当后台修改代理用户时必须输入")
+	private String bankName;
+	
+	/**卡号*/
+	@QueryColumn("bank_no")
+	@ApiParam("卡号,当后台修改代理用户时必须输入")
+	private String bankNo;
 }

@@ -3,24 +3,40 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.jmsoft.user.mybatis.LoginUserDao">
 
-	<select id="list" resultType="hashMap" parameterType="com.jmsoft.user.vo.LoginUserVo">
-		select 
-			lur.id,
-			lur.profile_img,
-			lur.nick_name,
-			lur.address,
-			lur.update_time,
-			lur.l_name,
-			lur.certificate_no,
-			lur.l_phone,
-			lur.create_time,
-			lur.l_status,
-			lur.wx_open_id,
-			lur.alipay_open_id,
-			(select d_text from sys_dictionary where d_value = lur.l_sex and d_parent_token = 'DX001' and d_status = 0) as l_sex_str, 
-			(select d_text from sys_dictionary where d_value = lur.certificate_type and d_parent_token = 'DX002' and d_status = 0) as certificate_type_str,
-			lur.l_sex, 
-			lur.certificate_type
+	<select id="list" resultType="hashMap"
+		parameterType="com.jmsoft.user.vo.LoginUserVo">
+		select
+		lur.id,
+		lur.profile_img,
+		lur.user_type,
+		case
+		when lur.user_type = 0 then '普通用户'
+		when lur.user_type = 1 then '商家'
+		when lur.user_type = 2 then '市级代理'
+		when lur.user_type = 3 then '县级代理'
+		else '未知' end user_type_str,
+		lur.nick_name,
+		lur.address,
+		lur.update_time,
+		lur.l_name,
+		lur.certificate_no,
+		lur.l_phone,
+		lur.create_time,
+		lur.l_status,
+		case
+		when lur.l_status = 0 then '正常'
+		when lur.l_status = 1 then '已停用'
+		else '未知' end l_status_str,
+		lur.wx_open_id,
+		lur.alipay_open_id,
+		(select d_text from sys_dictionary where d_value = lur.l_sex and
+		d_parent_token = 'DX001' and d_status = 0) as l_sex_str,
+		(select d_text from sys_dictionary where d_value = lur.certificate_type and
+		d_parent_token = 'DX002' and d_status = 0) as certificate_type_str,
+		lur.l_sex,
+		lur.bank_name,
+		lur.bank_no,
+		lur.certificate_type
 		from login_user lur
 		where lur.l_status != 2
 		<if test="nickName != null and nickName != ''">
@@ -43,6 +59,9 @@
 		</if>
 		<if test="certificateType != null and certificateType != ''">
 			and lur.certificate_type = #{certificateType}
+		</if>
+		<if test="userType != null">
+			and lur.user_type = #{userType}
 		</if>
 		<if test="status != null">
 			and lur.l_status = #{status}

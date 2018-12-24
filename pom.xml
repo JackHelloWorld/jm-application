@@ -16,6 +16,8 @@
 		<module>jmsoft-message-service</module>
 		<module>jmsoft-log-service-impl</module>
 		<module>jmsoft-log-service</module>
+		<module>jmsoft-equipment-service-impl</module>
+		<module>jmsoft-equipment-service</module>
 		<module>jmsoft-common</module>
 	</modules>
 

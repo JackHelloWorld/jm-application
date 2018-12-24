@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.jmsoft.sys.entity.Address;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address, Long>{
+public interface AddressRepository extends JpaRepository<Address, String>{
 
 	List<Address> findByParentCode(String parentCode);
 	

@@ -7,43 +7,34 @@
 			<el-row>
 				<el-col :span="24">
 					<el-form :inline="true" class="demo-form-inline">
-						<el-form-item label="昵称">
-							<el-input v-model="queryData.nickName" placeholder="昵称"></el-input>
+						<el-form-item label="创建人">
+							<el-input v-model="queryData.createUserName" placeholder="创建人名称"></el-input>
 						</el-form-item>
 						<el-form-item label="地址">
 							<el-input v-model="queryData.address" placeholder="地址"></el-input>
 						</el-form-item>
 						<el-form-item label="名称">
-							<el-input v-model="queryData.name" placeholder="真实名称"></el-input>
+							<el-input v-model="queryData.name" placeholder="设备名称"></el-input>
 						</el-form-item>
-						<el-form-item label="手机">
-							<el-input v-model="queryData.phone" placeholder="手机号"></el-input>
+						<el-form-item label="编号">
+							<el-input v-model="queryData.no" placeholder="设备号"></el-input>
 						</el-form-item>
-						<el-form-item label="证件">
-							<el-input v-model="queryData.certificateNo" placeholder="证件号"></el-input>
+						<el-form-item label="市级代理人">
+							<el-input v-model="queryData.cityUserName" placeholder="市级代理人名称"></el-input>
+						</el-form-item>
+						<el-form-item label="县级代理人">
+							<el-input v-model="queryData.countyUserName" placeholder="县级代理人名称"></el-input>
+						</el-form-item>
+						<el-form-item label="备注">
+							<el-input v-model="queryData.remark" placeholder="备注"></el-input>
 						</el-form-item>
 						<el-form-item label="状态">
 							<el-select v-model="queryData.status" placeholder="请选择状态">
-								<el-option label="正常" :value="0"></el-option>
-								<el-option label="已禁用" :value="1"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="类型">
-							<el-select v-model="queryData.userType" placeholder="请选择用户类型">
-								<el-option label="普通用户" :value="0"></el-option>
-								<el-option label="商家" :value="1"></el-option>
-								<el-option label="市级代理" :value="2"></el-option>
-								<el-option label="县级代理" :value="3"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="性别">
-							<el-select v-model="queryData.sex" placeholder="请选择性别">
-								<el-option :label="item.text" v-for="item in selectData.sexData" :key="item.text" :value="item.value"></el-option>
-							</el-select>
-						</el-form-item>
-						<el-form-item label="证件类型">
-							<el-select v-model="queryData.certificateType" placeholder="请选择证件类型">
-								<el-option :label="item.text" v-for="item in selectData.certificateTypeData" :key="item.text" :value="item.value"></el-option>
+								<el-option label="初始状态" :value="0"></el-option>
+								<el-option label="共享中" :value="1"></el-option>
+								<el-option label="使用中" :value="2"></el-option>
+								<el-option label="取消共享" :value="3"></el-option>
+								<el-option label="已停用" :value="4"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-form>

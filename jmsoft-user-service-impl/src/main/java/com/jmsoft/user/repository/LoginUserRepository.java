@@ -9,5 +9,7 @@ import com.jmsoft.user.entity.LoginUser;
 public interface LoginUserRepository extends JpaRepository<LoginUser, Long>{
 
 	LoginUser findTop1ByIdAndStatusIn(Long id, Integer[] status);
+
+	long countByIdAndStatusAndUserType(Long userId, Integer status, Integer userType);
 	
 }

@@ -86,6 +86,16 @@ public class LoginUser implements Serializable{
 	/**删除时间*/
 	@Column(name="delete_time")
 	private Date deleteTime;
+
+	/**类型{0:普通用户,1:商家,2:市级代理,3:县级代理}*/
+	@Column(name="user_type")
+	private Integer userType;
+
+	/**开户行名称*/
+	@Column(name="bank_name")
+	private String bankName;
 	
-	
+	/**卡号*/
+	@Column(name="bank_no")
+	private String bankNo;
 }

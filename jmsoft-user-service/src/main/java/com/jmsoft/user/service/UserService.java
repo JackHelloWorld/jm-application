@@ -122,5 +122,7 @@ public interface UserService {
 	 */
 	public ResponseResult updateProfile(String profile, AdminUserDbVo user) throws BizException;
 
+	public boolean checkUserStatus(Long createUserId) throws BizException ;
+
 	
 }

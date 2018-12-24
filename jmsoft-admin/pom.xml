@@ -22,6 +22,11 @@
 			<artifactId>jmsoft-message-service</artifactId>
 			<version>1.0.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.jmsoft</groupId>
+			<artifactId>jmsoft-equipment-service</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<!-- <dependency>
 			<groupId>com.jmsoft</groupId>
 			<artifactId>jmsoft-log-service</artifactId>

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jmsoft.admin.utils.BaseAdminController;
 import com.jmsoft.common.data.ResponseResult;
+import com.jmsoft.equipment.service.EquipmentService;
+import com.jmsoft.equipment.vo.EquipmentVo;
 import com.jmsoft.user.service.LoginUserService;
 import com.jmsoft.user.vo.LoginUserVo;
 
@@ -17,21 +19,21 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
 @RestController
-@RequestMapping("loginuser")
-@Api(description="前台用户相关服务",tags="前台用户控制器")
-public class LoginUserController extends BaseAdminController{
+@RequestMapping("equipment")
+@Api(description="设备相关服务",tags="设备控制器")
+public class EquipmentController extends BaseAdminController{
 
 	private static final long serialVersionUID = 304774933228615052L;
 	
 	@Reference
-	LoginUserService loginUserService;
+	EquipmentService equipmentService;
 	
 	@PostMapping("list")
 	@ApiOperation("获取列表")
 	public ResponseResult list(@ApiParam(value="页大小",defaultValue="10") @RequestParam(value="pageSize",defaultValue="10")Integer pageSize,
-			@ApiParam(value="页码",defaultValue="1") @RequestParam(value="pageNumber",defaultValue="1")Integer pageNumber,LoginUserVo loginUserVo) throws Exception{
+			@ApiParam(value="页码",defaultValue="1") @RequestParam(value="pageNumber",defaultValue="1")Integer pageNumber,EquipmentVo equipmentVo) throws Exception{
 
-		return loginUserService.list(loginUserVo,pageNumber,pageSize);
+		return equipmentService.list(equipmentVo,pageNumber,pageSize);
 	}
 		
 	@PostMapping("update")

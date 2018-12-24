@@ -13,6 +13,7 @@ import Role from '../pages/Role.vue';
 import Resource from '../pages/Resource.vue';
 import Dictionary from '../pages/Dictionary.vue';
 import LoginUser from '../pages/LoginUser.vue';
+import Equipment from '../pages/Equipment.vue';
 
 import store from '../vuex/store.js';
 
@@ -29,6 +30,7 @@ const routes = [{
 			{path: 'resource',component: Resource},
 			{path: 'dictionary',component: Dictionary},
 			{path: 'loginuser',component: LoginUser},//用户管理
+			{path: 'equipment',component: Equipment},//设备管理
 		],
 	},
 	{
