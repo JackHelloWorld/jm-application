@@ -47,36 +47,51 @@
 
 		<el-card class="box-card">
 			<div slot="header" class="clearfix">
-				<span class="card-title">用户列表</span>
+				<span class="card-title">设备列表</span>
 			</div>
 
 			<div>
 
 				<el-table :data="page.list" style="width: 100%" @current-change="handleCurrentChange" border>
-					<el-table-column prop="id" label="真实名称">
+					<el-table-column prop="id" label="设备编号" width="150px">
 						<template slot-scope="scope">
-							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.name }}</el-radio>
+							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.no }}</el-radio>
 						</template>
 					</el-table-column>
-					<el-table-column prop="nickName" label="昵称">
+					<el-table-column prop="name" label="设备名称" width="150px">
 					</el-table-column>
-					<el-table-column prop="phone" label="手机">
+					<el-table-column prop="cityUserName" label="市级代理人" width="150px">
 					</el-table-column>
-					<el-table-column prop="sexStr" label="性别">
+					<el-table-column prop="cityMoney" label="市级代理金额" width="150px">
 					</el-table-column>
-					<el-table-column prop="certificateTypeStr" label="证件类型">
+					<el-table-column prop="countyUserName" label="县级代理人" width="150px">
 					</el-table-column>
-					<el-table-column prop="certificateNo" label="证件号">
+					<el-table-column prop="countyMoney" label="县级代理金额" width="150px">
 					</el-table-column>
-					<el-table-column prop="address" label="地址">
+					<el-table-column prop="terraceMoney" label="平台金额" width="150px">
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间">
+					<el-table-column prop="price" label="单价(元)" width="150px">
 					</el-table-column>
-						<el-table-column prop="updateTime" label="资料更新时间">
+					<el-table-column prop="maxElectric" label="单次最大电量" width="150px">
 					</el-table-column>
-					<el-table-column prop="statusStr" label="状态">
+					<el-table-column prop="underMoney" label="低于余额拉闸" width="150px">
 					</el-table-column>
-					<el-table-column prop="userTypeStr" label="用户类型">
+					<el-table-column prop="leastMoney" label="最低启动金额" width="150px">
+					</el-table-column>
+					<el-table-column prop="statusStr" label="状态" width="150px">
+					</el-table-column>
+					<el-table-column prop="createUserName" label="创建人" width="150px">
+					</el-table-column>
+					<el-table-column prop="createTime" label="创建时间" width="200px">
+					</el-table-column>
+					<el-table-column prop="address" label="设备位置详情" width="250px">
+					</el-table-column>
+					<el-table-column prop="remark" label="备注" width="300px">
+						<template slot-scope="scope">
+							<span v-if="scope.row.remark && scope.row.remark.length <= 10" v-html="scope.row.remark"></span>
+							<a href="javascript:;" v-if="scope.row.remark && scope.row.remark.length > 10" title="点击查看详情" v-html="scope.row.remark.substring(0,10)+'...'"
+							 @click="showRemark(scope.row.remark)"></a>
+						</template>
 					</el-table-column>
 				</el-table>
 				<Pagination :page="page" queryMethod="pageQuery" :This="this" :queryData="queryData" />
@@ -86,46 +101,50 @@
 
 		<!-- 编辑窗口 -->
 		<el-dialog :title="editModal.title" :close-on-click-modal="false" :visible.sync="editModal.show" left>
-			<el-form ref="form" :model="form" label-width="80px">
-				<el-form-item label="昵称" prop="nickName" :rules="[{ required: true, message: '昵称不能为空'}]">
-					<el-input v-model="form.nickName" placeholder="请输入昵称">
+			<el-form ref="form" :model="form" label-width="110px">
+				<el-form-item label="设备编号" prop="no" :rules="[{ required: true, message: '设备编号不能为空'}]">
+					<el-input v-model="form.no" placeholder="请输入设备编号">
 					</el-input>
 				</el-form-item>
-				<el-form-item label="地址" prop="address" :rules="[{ required: true, message: '地址不能为空'}]">
-					<el-input v-model="form.address" placeholder="请输入地址"></el-input>
+				<el-form-item label="设备名称" prop="name" :rules="[{ required: true, message: '设备名称不能为空'}]">
+					<el-input v-model="form.name" placeholder="请输入设备名称"></el-input>
 				</el-form-item>
-				<el-form-item label="真实名称" prop="name" :rules="[{ required: true, message: '真实名称不能为空'}]">
-					<el-input v-model="form.name" placeholder="请输入真实名称"></el-input>
+				<el-form-item label="平台金额">
+					<el-input v-model="form.terraceMoney" type="number" :min="0" :step="0.01" placeholder="请输入平台金额"></el-input>
 				</el-form-item>
-				<el-form-item label="电话" prop="phone" :rules="[{ required: true, message: '电话不能为空'}]">
-					<el-input v-model="form.phone" placeholder="请输入电话"></el-input>
-				</el-form-item>
-				<el-form-item label="性别" :rules="[{ required: true, message: '请选择性别'}]" prop="sex">
-					<el-select v-model="form.sex" style="width: 100%;" placeholder="请选择性别">
-						<el-option :label="item.text" v-for="item in selectData.sexData" :key="item.text" :value="item.value"></el-option>
+				<el-form-item label="市级代理人">
+					<el-select v-model="form.cityUserId" style="width: 100%;" placeholder="请选择市级代理人">
+						<el-option :label="item.name" v-for="item in editModal.userInfos" v-if="item.userType == 2" :key="item.id" :value="item.id"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="证件类型" :rules="[{ required: true, message: '请选择证件类型'}]" prop="certificateType">
-					<el-select v-model="form.certificateType" style="width: 100%;" placeholder="请选择证件类型">
-						<el-option :label="item.text" v-for="item in selectData.certificateTypeData" :key="item.text" :value="item.value"></el-option>
+				<el-form-item label="市级代理金额">
+					<el-input v-model="form.cityMoney" type="number" :min="0" :step="0.01" placeholder="请输入市级代理金额"></el-input>
+				</el-form-item>
+				<el-form-item label="县级代理人">
+					<el-select v-model="form.countyUserId" style="width: 100%;" placeholder="请选择县级代理人">
+						<el-option :label="item.name"  v-if="item.userType == 3" v-for="item in editModal.userInfos" :key="item.id" :value="item.id"></el-option>
 					</el-select>
 				</el-form-item>
-				<el-form-item label="证件号" prop="certificateNo" :rules="[{ required: true, message: '请输入证件号'}]">
-					<el-input v-model="form.certificateNo" placeholder="请输入证件号"></el-input>
+				<el-form-item label="县级代理金额">
+					<el-input v-model="form.countyMoney" type="number" :min="0" :step="0.01" placeholder="请输入县级代理金额"></el-input>
 				</el-form-item>
-				<el-form-item label="用户类型">
-					<el-select style="width: 100%;" v-model="form.userType" placeholder="请选择用户类型" prop="userType" :rules="[{ required: true, message: '用户类型不能为空'}]">
-						<el-option v-if="editModal.type == 2" label="普通用户" :value="0"></el-option>
-						<el-option v-if="editModal.type == 2" label="商家" :value="1"></el-option>
-						<el-option label="市级代理" :value="2"></el-option>
-						<el-option label="县级代理" :value="3"></el-option>
-					</el-select>
+				<el-form-item label="单价(元)">
+					<el-input v-model="form.price" type="number" :min="0" :step="0.01" placeholder="请输入单价"></el-input>
 				</el-form-item>
-				<el-form-item label="开户行">
-					<el-input v-model="form.bankName" placeholder="代理用户必须输入开户行"></el-input>
+				<el-form-item label="单次最大电量">
+					<el-input v-model="form.maxElectric" type="number" :min="0" :step="0.01" placeholder="请输入单次最大电量"></el-input>
 				</el-form-item>
-				<el-form-item label="卡号">
-					<el-input v-model="form.bankNo" placeholder="代理用户必须输入卡号"></el-input>
+				<el-form-item label="低于余额拉闸">
+					<el-input v-model="form.underMoney" type="number" :min="0" :step="0.01" placeholder="请输入低于余额拉闸"></el-input>
+				</el-form-item>
+				<el-form-item label="最低启动金额">
+					<el-input v-model="form.leastMoney" type="number" :min="0" :step="0.01" placeholder="请输入最低启动金额"></el-input>
+				</el-form-item>
+				<el-form-item label="位置详情">
+					<el-input v-model="form.address" placeholder="请输入位置详情"></el-input>
+				</el-form-item>
+				<el-form-item label="设备备注">
+					<el-input v-model="form.remark" type="textarea" placeholder="请输入设备备注"></el-input>
 				</el-form-item>
 			</el-form>
 
@@ -133,6 +152,11 @@
 				<el-button @click="editModal.show = false">取 消</el-button>
 				<el-button type="primary" @click="formSubmit('form')">确 定</el-button>
 			</span>
+		</el-dialog>
+
+
+		<el-dialog title="备注详情" :visible.sync="showModal.show" width="350px" center>
+			<div style="width: 100%;word-wrap: break-word;word-break: break-all;" v-html="showModal.html"></div>
 		</el-dialog>
 	</div>
 </template>
@@ -156,21 +180,27 @@
 				editModal: {
 					show: false,
 					title: '',
-					loading: false
+					loading: false,
+					userInfos : []
 				},
 				page: {
 					list: [],
 					navigatepageNums: []
 				},
 				form: {
-					nickName: '',
-					userType: null,
-					address: '',
-					name: '',
-					sex: '',
-					phone: '',
-					certificateType: '',
-					certificateNo: '',
+					no : '',
+					name : '',
+					terraceMoney : 0.2,
+					cityUserId : null,
+					cityMoney : 0,
+					countyUserId : null,
+					countyMoney : 0,
+					price : 1.5,
+					maxElectric : 60,
+					underMoney : 0,
+					leastMoney : 0,
+					address : '',
+					remark : ''
 				},
 				selectRow: {
 					id: null
@@ -187,6 +217,10 @@
 					status: '',
 					pageSize: 10,
 					pageNumber: 1,
+				},
+				showModal: {
+					show: false,
+					html: '',
 				}
 			}
 		},
@@ -196,24 +230,12 @@
 		},
 		mounted: function() {
 			this.query();
-			httpUtils.paramPost(apiConfig.common.findDic, {
-				'parentToken': 'DX001'
-			}, (data) => {
-				this.selectData.sexData = data.data;
-			}, (err) => {
-				componentUtils.message.error(err.msg);
-			});
-			httpUtils.paramPost(apiConfig.common.findDic, {
-				'parentToken': 'DX002'
-			}, (data) => {
-				this.selectData.certificateTypeData = data.data;
-			}, (err) => {
-				componentUtils.message.error(err.msg);
-			});
-
-			setTimeout(function() {
+			httpUtils.paramPost(apiConfig.equipment.getProxyUser, {}, (data) => {
+				this.editModal.userInfos = data.data;
 				this.loading = false;
-			}, 2000);
+			}, (err) => {
+				this.loading = false;
+			});
 		},
 		methods: {
 			handleCurrentChange(row) { //点击行选择
@@ -229,24 +251,33 @@
 				}
 				action(this.selectRow);
 			},
-			addInfo(){
+			showRemark(remark) {
+				this.showModal.html = remark;
+				this.showModal.show = true;
+			},
+			addInfo() {
 				this.form = {
-					nickName: '',
-					userType: null,
-					address: '',
-					name: '',
-					sex: '',
-					phone: '',
-					certificateType: '',
-					certificateNo: '',
+					no : '',
+					name : '',
+					terraceMoney : 0.2,
+					cityUserId : null,
+					cityMoney : 0,
+					countyUserId : null,
+					countyMoney : 0,
+					price : 1.5,
+					maxElectric : 60,
+					underMoney : 0,
+					leastMoney : 0,
+					address : '',
+					remark : ''
 				}
-				this.editModal.title = '新增代理';
+				this.editModal.title = '新增设备';
 				this.editModal.type = 1;
 				this.editModal.show = true;
 			},
 			findList() {
 				const self = this;
-				httpUtils.paramPost(apiConfig.loginUser.list, this.queryData, (data) => {
+				httpUtils.paramPost(apiConfig.equipment.list, this.queryData, (data) => {
 					tools.pageUtils(this.page, data.data);
 					this.loading = false;
 				}, (err) => {
@@ -264,14 +295,30 @@
 			query() {
 				this.queryData.pageNumber = 1;
 				this.page.list = [];
+				this.selectRow = {};
 				this.findList();
 			},
 			updateInfo() {
 				this.isSelectItem((row) => {
-					this.form = row;
-					delete this.form.createTime;
-					delete this.form.updateTime;
-					this.editModal.title = '修改用户';
+					console.log(row.cityUserId);
+					this.form = {
+						no : row.no,
+						id : row.id,
+						name : row.name,
+						terraceMoney : row.terraceMoney || 0.2,
+						cityUserId : row.cityUserId,
+						cityMoney : row.cityMoney || 0,
+						countyUserId : row.countyUserId,
+						countyMoney : row.countyMoney || 0,
+						price : row.price || 1.5,
+						maxElectric : row.maxElectric || 60,
+						underMoney : row.underMoney || 0,
+						leastMoney : row.leastMoney || 0,
+						address : row.address,
+						remark : row.remark
+					}
+				
+					this.editModal.title = '修改设备';
 					this.editModal.type = 2;
 					this.editModal.show = true;
 				}, '请选择需要修改的信息');
@@ -279,13 +326,13 @@
 			success() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将启用选中用户, 是否继续?', '提示', {
+					this.$confirm('将启用选中设备, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 
-						httpUtils.paramPost(apiConfig.loginUser.success, {
+						httpUtils.paramPost(apiConfig.equipment.success, {
 							id: row.id
 						}, (data) => {
 							componentUtils.message.success('操作成功');
@@ -303,13 +350,13 @@
 			blockInfo() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将停用选中用户, 是否继续?', '提示', {
+					this.$confirm('将停用选中设备, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 
-						httpUtils.paramPost(apiConfig.loginUser.block, {
+						httpUtils.paramPost(apiConfig.equipment.block, {
 							id: row.id
 						}, (data) => {
 							this.query();
@@ -327,13 +374,13 @@
 			deleteInfo() {
 				this.isSelectItem((row) => {
 
-					this.$confirm('将删除选中用户并且无法恢复, 是否继续?', '提示', {
+					this.$confirm('将删除选中设备并且无法恢复, 是否继续?', '提示', {
 						confirmButtonText: '确定',
 						cancelButtonText: '取消',
 						type: 'warning'
 					}).then(() => {
 
-						httpUtils.paramPost(apiConfig.loginUser.deleteInfo, {
+						httpUtils.paramPost(apiConfig.equipment.deleteInfo, {
 							id: row.id
 						}, (data) => {
 							this.query();
@@ -348,6 +395,30 @@
 
 				}, '请选择需要删除的信息');
 			},
+			resetInfo() {
+				this.isSelectItem((row) => {
+
+					this.$confirm('将重置选中设备并且无法恢复, 是否继续?', '提示', {
+						confirmButtonText: '确定',
+						cancelButtonText: '取消',
+						type: 'warning'
+					}).then(() => {
+
+						httpUtils.paramPost(apiConfig.equipment.reset, {
+							id: row.id
+						}, (data) => {
+							this.query();
+							componentUtils.message.success(data.msg);
+						}, (err) => {
+							componentUtils.message.error(err.msg);
+						});
+
+					}).catch(() => {
+
+					});
+
+				}, '请选择需要重置的信息');
+			},
 			formSubmit(formName) {
 
 				this.$refs[formName].validate((valid) => {
@@ -360,12 +431,12 @@
 						const loading = componentUtils.loading('操作中,请稍后');
 
 						var self = this;
-						
-						var url = apiConfig.loginUser.update;
-						if(this.editModal.type == 1){
-							url = apiConfig.loginUser.save;
+
+						var url = apiConfig.equipment.update;
+						if (this.editModal.type == 1) {
+							url = apiConfig.equipment.save;
 						}
-						
+
 						httpUtils.paramPost(url, this.form, (data) => {
 							loading.close();
 							this.editModal.loading = false;

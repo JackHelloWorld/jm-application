@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.jmsoft.admin.utils.BaseAdminController;
+import com.jmsoft.common.annotation.ValidateAuth;
 import com.jmsoft.common.data.ResponseResult;
 import com.jmsoft.equipment.service.EquipmentService;
 import com.jmsoft.equipment.vo.EquipmentVo;
 import com.jmsoft.user.service.LoginUserService;
-import com.jmsoft.user.vo.LoginUserVo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +28,9 @@ public class EquipmentController extends BaseAdminController{
 	@Reference
 	EquipmentService equipmentService;
 	
+	@Reference
+	LoginUserService loginUserService;
+	
 	@PostMapping("list")
 	@ApiOperation("获取列表")
 	public ResponseResult list(@ApiParam(value="页大小",defaultValue="10") @RequestParam(value="pageSize",defaultValue="10")Integer pageSize,
@@ -38,32 +41,45 @@ public class EquipmentController extends BaseAdminController{
 		
 	@PostMapping("update")
 	@ApiOperation(value="修改信息",notes="需传入id")
-	public ResponseResult update(LoginUserVo loginUserVo) throws Exception{
-		return loginUserService.updateInfo(loginUserVo,true);
+	public ResponseResult update(EquipmentVo equipmentVo) throws Exception{
+		return equipmentService.update(equipmentVo, getUser().getId());
 	}
 	
 	@PostMapping("save")
 	@ApiOperation(value="保存信息",notes="无需传入id")
-	public ResponseResult save(LoginUserVo loginUserVo) throws Exception{
-		return loginUserService.save(loginUserVo);
+	public ResponseResult save(EquipmentVo equipmentVo) throws Exception{
+		return equipmentService.save(equipmentVo,getUser().getId());
 	}
 	
 	@PostMapping("delete")
 	@ApiOperation(value="删除信息")
-	public ResponseResult delete(@ApiParam(value="用户id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws NumberFormatException, Exception{
-		return loginUserService.delete(id,getUser());
+	public ResponseResult delete(@ApiParam(value="设备id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws NumberFormatException, Exception{
+		return equipmentService.delete(id,getUser().getId());
 	}
 	
 	@PostMapping("success")
-	@ApiOperation(value="启用用户")
-	public ResponseResult success(@ApiParam(value="用户id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws Exception{
-		return loginUserService.success(id,getUser());
+	@ApiOperation(value="启用设备")
+	public ResponseResult success(@ApiParam(value="设备id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws Exception{
+		return equipmentService.success(id,getUser().getId());
 	}
 	
-	@ApiOperation(value="停用用户")
+	@ApiOperation(value="停用设备")
 	@PostMapping("block")
-	public ResponseResult block(@ApiParam(value="用户id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws Exception{
-		return loginUserService.block(id,getUser());
+	public ResponseResult block(@ApiParam(value="设备id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws Exception{
+		return equipmentService.block(id,getUser().getId());
+	}
+	
+	@ApiOperation(value="重置设备")
+	@PostMapping("reset")
+	public ResponseResult reset(@ApiParam(value="设备id",required=true) @RequestParam(value="id",defaultValue="0")Long id) throws Exception{
+		return equipmentService.reset(id,getUser().getId());
+	}
+	
+	@ApiOperation(value="获取代理用户用户,2:市集代理,2:县级代理")
+	@PostMapping("get_proxy_user")
+	@ValidateAuth({"/equipment/update","/equipment/save"})
+	public ResponseResult findUserType() throws Exception{
+		return loginUserService.findListByType(new Integer[] {2,3});
 	}
 	
 }

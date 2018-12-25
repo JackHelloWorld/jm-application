@@ -7,7 +7,14 @@
 		SELECT
 			bet.*, aur.nick_name AS e_create_user_name,
 			lur_city.l_name AS e_city_user_name,
-			lur.l_name AS e_county_user_name
+			lur.l_name AS e_county_user_name,
+			case
+			when bet.e_status = 0 then '初始状态'
+			when bet.e_status = 1 then '共享中'
+			when bet.e_status = 2 then '使用中'
+			when bet.e_status = 3 then '取消共享'
+			when bet.e_status = 4 then '已停用'
+			else '未知' end e_status_str
 		FROM
 			biz_equipment bet
 		INNER JOIN admin_user aur ON aur.id = bet.e_create_user_id

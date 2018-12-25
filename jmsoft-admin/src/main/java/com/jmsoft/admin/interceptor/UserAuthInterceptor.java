@@ -23,7 +23,7 @@ public class UserAuthInterceptor implements HandlerInterceptor{
 
 	@Resource
 	private RedisTemplate<String, Object> redisTemplate;
-	
+
 	@Resource
 	private AuthService authService;
 
@@ -44,20 +44,26 @@ public class UserAuthInterceptor implements HandlerInterceptor{
 	public boolean preHandle(HttpServletRequest request,HttpServletResponse response, Object handler) throws Exception {
 
 		if(handler instanceof HandlerMethod){
-			
+
 			HandlerMethod handlerMethod = (HandlerMethod) handler;
 			Method method = handlerMethod.getMethod();
-			
+
 			ValidateIgnoreLogin validateIgnoreLogin = method.getAnnotation(ValidateIgnoreLogin.class);
 			if(validateIgnoreLogin != null)
 				return true;
-			
-			String url = request.getRequestURI();
+
+			String[] url = new String[] {request.getRequestURI()};
 			ValidateAuth validateAuth = method.getAnnotation(ValidateAuth.class);
 			if(validateAuth != null){
 				if(!validateAuth.validate()) return true;
-				if(Tools.notEmpty(validateAuth.value()))
-					url = validateAuth.value();
+				if(validateAuth.value() != null) {
+					for (String value : validateAuth.value()) {
+						if(Tools.notEmpty(value)) {
+							url = validateAuth.value();
+							break;
+						}
+					}
+				}
 			}
 			boolean result = authService.validate(ThreadData.ADMIN_USER.get(),url);
 			if(! result){

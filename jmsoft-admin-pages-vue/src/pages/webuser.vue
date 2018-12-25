@@ -210,6 +210,7 @@
 				this.queryData.pageNumber = 1;
 				this.page.list = [];
 				this.findList();
+				this.selectRow = {};
 			},
 			findResourceSelect(data){
 				for(var i = 0;i<data.length;i++){

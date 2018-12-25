@@ -17,7 +17,7 @@ public class AuthService {
 	 * @param url
 	 * @return
 	 */
-	public boolean validate(AdminUserDbVo adminUser,String url) {
+	public boolean validate(AdminUserDbVo adminUser,String[] urls) {
 		
 		if(adminUser.getIsAdmin() != null && adminUser.getIsAdmin()) 
 			return true;
@@ -26,8 +26,10 @@ public class AuthService {
 		
 		if(adminResources != null){
 			for (AdminResourceVo adminResource : adminResources) {
-				if(url.trim().equals(adminResource.getUrl()))
-					return true;
+				for (String url : urls) {
+					if(url.trim().equals(adminResource.getUrl()))
+						return true;
+				}
 			}
 		}
 		

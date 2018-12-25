@@ -1,5 +1,6 @@
 package com.jmsoft.user.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -295,6 +296,19 @@ public class LoginUserServiceImpl extends BaseUserService implements LoginUserSe
 	@Override
 	public boolean isCountyUser(Long userId) {
 		return loginUserRepository.countByIdAndStatusAndUserType(userId,0,3) > 0;
+	}
+
+	@Override
+	public ResponseResult findListByType(Integer[] type) {
+		
+		List<LoginUser> list = loginUserRepository.findByStatusAndUserTypeInOrderByUpdateTimeDesc(0,type);
+		
+		List<LoginUserVo> loginUserVos = new ArrayList<>();
+		
+		for (LoginUser loginUser : list) 
+			loginUserVos.add(BeanTools.setPropertiesToBean(loginUser, LoginUserVo.class));
+		
+		return ResponseResult.SUCCESS("获取用户信息成功",loginUserVos);
 	}
 
 }

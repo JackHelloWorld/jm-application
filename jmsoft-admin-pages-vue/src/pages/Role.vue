@@ -180,6 +180,7 @@
 			query() {
 				this.queryData.pageNumber = 1;
 				this.page.list = [];
+				this.selectRow = {};
 				this.findList();
 			},
 			findResourceSelect(data){

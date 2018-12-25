@@ -99,6 +99,17 @@ var ApiConfig = {
 		success : 'http://127.0.0.1:9999/loginuser/success',
 	},
 	
+	equipment : {
+		list : 'http://127.0.0.1:9999/equipment/list',
+		getProxyUser : 'http://127.0.0.1:9999/equipment/get_proxy_user',
+		update : 'http://127.0.0.1:9999/equipment/update',
+		save : 'http://127.0.0.1:9999/equipment/save',
+		deleteInfo : 'http://127.0.0.1:9999/equipment/delete',
+		block : 'http://127.0.0.1:9999/equipment/block',
+		success : 'http://127.0.0.1:9999/equipment/success',
+		reset : 'http://127.0.0.1:9999/equipment/reset',
+	},
+	
 }
 
 export default ApiConfig;

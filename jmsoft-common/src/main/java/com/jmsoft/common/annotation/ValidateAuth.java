@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 public @interface ValidateAuth {
 
 	/**验证值*/
-	String value() default "";
+	String[] value() default "";
 	
 	/**是否验证,默认为验证*/
 	boolean validate() default true;

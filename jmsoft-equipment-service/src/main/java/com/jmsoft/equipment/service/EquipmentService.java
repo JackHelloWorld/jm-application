@@ -55,5 +55,37 @@ public interface EquipmentService {
 	 * @return
 	 */
 	public ResponseResult list(EquipmentVo equipmentVo, Integer pageNumber, Integer pageSize) throws Exception;
+
+	/**
+	 * 删除设备
+	 * @param id 设备id
+	 * @param userId 操作人
+	 * @return
+	 */
+	public ResponseResult delete(Long id, Long userId);
+
+	/**
+	 * 启用设备
+	 * @param id 设备id
+	 * @param userId 操作人
+	 * @return
+	 */
+	public ResponseResult success(Long id, Long userId);
+
+	/**
+	 * 停用设备
+	 * @param id 设备id
+	 * @param userId 操作人
+	 * @return
+	 */
+	public ResponseResult block(Long id, Long userId);
+
+	/**
+	 * 重置设备
+	 * @param id 设备id
+	 * @param userId 操作人
+	 * @return
+	 */
+	public ResponseResult reset(Long id, Long userId);
 	
 }

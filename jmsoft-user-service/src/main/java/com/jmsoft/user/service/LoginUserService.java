@@ -73,4 +73,11 @@ public interface LoginUserService {
 	 * @return
 	 */
 	public boolean isCountyUser(Long userId);
+
+	/**
+	 * 根据类型获取前端用户信息
+	 * @param type
+	 * @return
+	 */
+	public ResponseResult findListByType(Integer[] type);
 }

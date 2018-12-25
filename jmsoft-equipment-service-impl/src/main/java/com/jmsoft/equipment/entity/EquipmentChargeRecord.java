@@ -46,7 +46,7 @@ public class EquipmentChargeRecord implements Serializable{
 	@Column(name="e_end_time")
 	private Date endTime;
 	
-	/**状态,{0:充电中,1:已归档,2:已删除}*/
+	/**状态,{0:充电中,1:已归档,2已重置,9:已删除}*/
 	@Column(name="e_status")
 	private Integer status;
 	
@@ -97,5 +97,11 @@ public class EquipmentChargeRecord implements Serializable{
 	/**县级代理人*/
 	@Column(name="e_county_user_id")
 	private Long countyUserId;
+	
+	/**重置时间*/
+	@Column(name="e_reset_time")
+	private Date resetTime;
+	
+	
 	
 }

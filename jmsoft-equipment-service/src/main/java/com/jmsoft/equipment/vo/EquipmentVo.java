@@ -61,6 +61,11 @@ public class EquipmentVo implements Serializable{
 	@QueryColumn("e_status")
 	private Integer status;
 	
+	/**状态,字符串*/
+	@ApiParam(hidden=true)
+	@QueryColumn("e_status_str")
+	private String statusStr;
+	
 	/**经度*/
 	@ApiParam(hidden=true)
 	@QueryColumn("e_longitude")
@@ -121,7 +126,7 @@ public class EquipmentVo implements Serializable{
 	@ApiParam("市级代理人名称,查询时有效")
 	@QueryConfig(QueryType.LIKEBOTH)
 	@QueryColumn("e_city_user_name")
-	private Long cityUserName;
+	private String cityUserName;
 	
 	/**县级代理*/
 	@ApiParam("县级代理金额")
@@ -137,7 +142,7 @@ public class EquipmentVo implements Serializable{
 	@ApiParam("县级代理金人名称,查询时有效")
 	@QueryConfig(QueryType.LIKEBOTH)
 	@QueryColumn("e_county_user_name")
-	private Long countyUserName;
+	private String countyUserName;
 	
 	/**设备名称*/
 	@ApiParam("设备名称")
@@ -147,7 +152,7 @@ public class EquipmentVo implements Serializable{
 	private String name;
 	
 	/**设备备注*/
-	@ApiParam("设备备注,说名")
+	@ApiParam("设备备注,说明")
 	@QueryColumn("e_remark")
 	@QueryConfig(QueryType.LIKEBOTH)
 	private String remark;

@@ -19,6 +19,7 @@
 		<module>jmsoft-equipment-service-impl</module>
 		<module>jmsoft-equipment-service</module>
 		<module>jmsoft-common</module>
+		<module>jmsoft-generate-address</module>
 	</modules>
 
 	<properties>
