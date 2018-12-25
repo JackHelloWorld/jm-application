@@ -1,4 +1,4 @@
-package com.jmsoft;
+package com.jmsoft.common.web;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
