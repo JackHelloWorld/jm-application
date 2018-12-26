@@ -16,6 +16,12 @@ public enum ResultDic {
 	/**未登录*/
 	NOT_LOGIN(1,"登录已过期",false),
 	
+	/**登录超时*/
+	LOGIN_TIME_OUT(2,"请求登录超时",false),
+	
+	/**登录超时*/
+	FREQUENCY(3,"操作频繁,请稍后重试",false),
+	
 	/**无权操作*/
 	NOT_PERMISSION(12,"无权操作",false),
 	

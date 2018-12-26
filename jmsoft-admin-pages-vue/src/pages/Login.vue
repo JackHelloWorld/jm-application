@@ -13,7 +13,7 @@
 
 					<div class="dl" v-loading="loading">
 						<div class="d1 c1 ">
-							<span>物业管理系统</span>
+							<span>后台管理系统</span>
 						</div>
 						<div class="d1 c2">
 							<i class="icon iconfont icon-zhanghu"></i>

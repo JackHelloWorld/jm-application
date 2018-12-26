@@ -15,5 +15,7 @@ public interface LoginUserRepository extends JpaRepository<LoginUser, Long>{
 	long countByIdAndStatusAndUserType(Long userId, Integer status, Integer userType);
 
 	List<LoginUser> findByStatusAndUserTypeInOrderByUpdateTimeDesc(Integer status, Integer[] type);
+
+	LoginUser findTop1ByWxOpenIdAndStatusIn(String wxOpenId, Integer[] status);
 	
 }

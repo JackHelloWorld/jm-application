@@ -13,6 +13,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.jmsoft.common.data.ResponseResult;
 import com.jmsoft.common.data.ResultCode;
+import com.jmsoft.common.exception.BizException;
 import com.jmsoft.common.utils.AnnotationUtils;
 import com.jmsoft.common.utils.BeanTools;
 import com.jmsoft.common.utils.PageBean;
@@ -300,15 +301,39 @@ public class LoginUserServiceImpl extends BaseUserService implements LoginUserSe
 
 	@Override
 	public ResponseResult findListByType(Integer[] type) {
-		
+
 		List<LoginUser> list = loginUserRepository.findByStatusAndUserTypeInOrderByUpdateTimeDesc(0,type);
-		
+
 		List<LoginUserVo> loginUserVos = new ArrayList<>();
-		
+
 		for (LoginUser loginUser : list) 
 			loginUserVos.add(BeanTools.setPropertiesToBean(loginUser, LoginUserVo.class));
-		
+
 		return ResponseResult.SUCCESS("获取用户信息成功",loginUserVos);
+	}
+
+	@Override
+	public LoginUserVo initLoginUserByWeChatOpenId(String openid) throws BizException {
+
+		if(openid == null)
+			return null;
+
+		LoginUser loginUser = loginUserRepository.findTop1ByWxOpenIdAndStatusIn(openid,new Integer[] {0,1});
+
+		//初始化用户
+		if(loginUser == null) {
+			loginUser = new LoginUser();
+			loginUser.setCreateTime(new Date());
+			loginUser.setUserType(0);
+			loginUser.setStatus(0);
+			loginUser.setWxOpenId(openid);
+			loginUserRepository.save(loginUser);
+		}else {
+			if (loginUser.getStatus() == 1) 
+				ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "信息已禁用,请联系管理员").throwBizException();
+		}
+		
+		return BeanTools.setPropertiesToBean(loginUser, LoginUserVo.class);
 	}
 
 }

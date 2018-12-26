@@ -62,30 +62,30 @@
 			<div>
 
 				<el-table :data="page.list" style="width: 100%" @current-change="handleCurrentChange" border>
-					<el-table-column prop="id" label="真实名称">
+					<el-table-column prop="id" label="真实名称" width="140px">
 						<template slot-scope="scope">
 							<el-radio v-model="selectRow.id" :label="scope.row.id">{{ scope.row.name }}</el-radio>
 						</template>
 					</el-table-column>
-					<el-table-column prop="nickName" label="昵称">
+					<el-table-column prop="nickName" label="昵称" width="140px">
 					</el-table-column>
-					<el-table-column prop="phone" label="手机">
+					<el-table-column prop="phone" label="手机" width="140px">
 					</el-table-column>
-					<el-table-column prop="sexStr" label="性别">
+					<el-table-column prop="sexStr" label="性别" width="60px">
 					</el-table-column>
-					<el-table-column prop="certificateTypeStr" label="证件类型">
+					<el-table-column prop="certificateTypeStr" label="证件类型" width="80px">
 					</el-table-column>
-					<el-table-column prop="certificateNo" label="证件号">
+					<el-table-column prop="certificateNo" label="证件号" width="180px">
 					</el-table-column>
-					<el-table-column prop="address" label="地址">
+					<el-table-column prop="address" label="地址" width="180px">
 					</el-table-column>
-					<el-table-column prop="createTime" label="创建时间">
+					<el-table-column prop="createTime" label="创建时间" width="180px">
 					</el-table-column>
-						<el-table-column prop="updateTime" label="资料更新时间">
+						<el-table-column prop="updateTime" label="资料更新时间"  width="180px">
 					</el-table-column>
-					<el-table-column prop="statusStr" label="状态">
+					<el-table-column prop="statusStr" label="状态"  width="100px">
 					</el-table-column>
-					<el-table-column prop="userTypeStr" label="用户类型">
+					<el-table-column prop="userTypeStr" label="用户类型"  width="100px">
 					</el-table-column>
 				</el-table>
 				<Pagination :page="page" queryMethod="pageQuery" :This="this" :queryData="queryData" />

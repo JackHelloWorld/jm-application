@@ -1,6 +1,7 @@
 package com.jmsoft.user.service;
 
 import com.jmsoft.common.data.ResponseResult;
+import com.jmsoft.common.exception.BizException;
 import com.jmsoft.user.vo.AdminUserDbVo;
 import com.jmsoft.user.vo.LoginUserVo;
 
@@ -80,4 +81,11 @@ public interface LoginUserService {
 	 * @return
 	 */
 	public ResponseResult findListByType(Integer[] type);
+
+	/**
+	 * 获取前台用户
+	 * @param openid
+	 * @return
+	 */
+	public LoginUserVo initLoginUserByWeChatOpenId(String openid) throws BizException;
 }
