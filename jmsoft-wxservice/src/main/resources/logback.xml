@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration  scan="true" scanPeriod="60 seconds" debug="false">
-    <property name="LOG_NAME" value="ADMINLOG" />
+    <property name="LOG_NAME" value="WxServiceLOG" />
     <property name="LOG_INFO" value="${LOG_NAME}.info" />
     <property name="LOG_ERROR" value="${LOG_NAME}.error" />
     <!--输出到控制台-->
