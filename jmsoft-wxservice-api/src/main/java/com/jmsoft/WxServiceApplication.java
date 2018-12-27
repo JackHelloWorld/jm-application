@@ -2,8 +2,6 @@ package com.jmsoft;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
@@ -12,7 +10,7 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.alibaba.dubbo.config.spring.context.annotation.DubboComponentScan;
 
-@SpringBootApplication(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
+@SpringBootApplication
 @DubboComponentScan(basePackages = "com.jmsoft")
 public class WxServiceApplication {
 
@@ -34,5 +32,5 @@ public class WxServiceApplication {
 		bean.setOrder(0);
 		return bean;
 	}
-    
+	
 }

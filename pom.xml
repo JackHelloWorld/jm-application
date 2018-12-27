@@ -20,7 +20,7 @@
 		<module>jmsoft-equipment-service</module>
 		<module>jmsoft-common</module>
 		<module>jmsoft-generate-address</module>
-		<module>jmsoft-wxservice</module>
+		<module>jmsoft-wxservice-api</module>
 	</modules>
 
 	<properties>
