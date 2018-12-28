@@ -30,6 +30,7 @@ import com.jmsoft.equipment.repository.EquipmentRepository;
 import com.jmsoft.equipment.service.BaseEquipmentService;
 import com.jmsoft.equipment.service.EquipmentService;
 import com.jmsoft.equipment.vo.EquipmentVo;
+import com.jmsoft.user.repository.LoginUserRepository;
 import com.jmsoft.user.service.LoginUserService;
 import com.jmsoft.user.service.UserService;
 import com.jmsoft.user.vo.LoginUserVo;
@@ -43,6 +44,9 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 	
 	@Resource
 	EquipmentChargeRecordRepository equipmentChargeRecordRepository;
+	
+	@Resource
+	LoginUserRepository loginUserRepository;
 
 	@Resource
 	EquipmentDao equipmentDao;
@@ -379,9 +383,14 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 		equipmentRepository.save(equipment);
 		equipmentBindRecordRepository.save(equipmentBindRecord);
 		
+		if(loginUserVo.getUserType() == 0) {
+			
+			int count = loginUserRepository.updateUserType(loginUserVo.getId(),0,1);
+			if(count != 1)
+				ResponseResult.DIY_ERROR(ResultCode.SysErrorCode, "系统繁忙,请稍后重试").throwBizException();
+		}
 		
-		
-		return null;
+		return ResponseResult.SUCCESS("信息绑定成功", equipment.getScanQrCode());
 	}
 
 }
