@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Reference;
@@ -19,8 +20,11 @@ import com.jmsoft.common.utils.BeanTools;
 import com.jmsoft.common.utils.PageBean;
 import com.jmsoft.common.utils.PageQuery;
 import com.jmsoft.common.utils.PageUtils;
+import com.jmsoft.common.utils.Tools;
 import com.jmsoft.equipment.entity.Equipment;
+import com.jmsoft.equipment.entity.EquipmentBindRecord;
 import com.jmsoft.equipment.mybatis.EquipmentDao;
+import com.jmsoft.equipment.repository.EquipmentBindRecordRepository;
 import com.jmsoft.equipment.repository.EquipmentChargeRecordRepository;
 import com.jmsoft.equipment.repository.EquipmentRepository;
 import com.jmsoft.equipment.service.BaseEquipmentService;
@@ -28,6 +32,7 @@ import com.jmsoft.equipment.service.EquipmentService;
 import com.jmsoft.equipment.vo.EquipmentVo;
 import com.jmsoft.user.service.LoginUserService;
 import com.jmsoft.user.service.UserService;
+import com.jmsoft.user.vo.LoginUserVo;
 
 @Service
 @Transactional(rollbackFor=Exception.class)
@@ -41,12 +46,18 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 
 	@Resource
 	EquipmentDao equipmentDao;
+	
+	@Resource
+	EquipmentBindRecordRepository equipmentBindRecordRepository;
 
 	@Reference
 	LoginUserService loginUserService;
 
 	@Reference
 	UserService userService;
+	
+	@Value("${user.equipment.code.rule}")
+	private String equipmentCodeRule;
 
 	@Override
 	public boolean checkCityInfo(Long loginUserId) {
@@ -314,6 +325,63 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 		equipmentChargeRecordRepository.resetInfo(equipment.getId(),new Date());
 		
 		return ResponseResult.SUCCESSM("重置设备成功");
+	}
+
+	@Override
+	public ResponseResult scanBind(String equipmentNo, Long userId) throws Exception {
+		
+		if(Tools.isEmpty(equipmentNo))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
+		
+		LoginUserVo loginUserVo = loginUserService.findInfoById(userId);
+		
+		//检查设备
+		Equipment equipment = equipmentRepository.findTop1ByNoAndStatusIn(equipmentNo.trim(), new Integer[] {0,1,2,3,4});
+		
+		if(equipment == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
+		
+		if(equipment.getStatus() != 0) {
+			
+			/**状态,{0:初始状态,1:共享中,2:使用中,3:取消共享,4:已停用,9:已删除}*/
+			switch (equipment.getStatus()) {
+			case 4:
+				return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无法绑定");
+
+			default:
+				
+				if(!equipment.getLoginUserId().equals(userId))
+					return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已被绑定,当前操作失败");
+				return ResponseResult.SUCCESS("信息绑定成功", equipment.getScanQrCode());
+			}
+		}
+		
+		//生成绑定信息
+		EquipmentBindRecord equipmentBindRecord = new EquipmentBindRecord();
+		equipmentBindRecord.setBindTime(new Date());
+		equipmentBindRecord.setBindUserId(userId);
+		equipmentBindRecord.setEquipmentId(equipment.getId());
+		equipmentBindRecord.setStatus(0);
+		
+		EquipmentVo oldEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+		
+		//生成二维码
+		String code = Tools.MD5(equipmentNo.trim().concat(loginUserVo.getWxOpenId()), "scan_code");
+		
+		String scanCode = equipmentCodeRule.replace("{code}", '{'+code+'}');
+		
+		equipmentBindRecord.setScanQrCode(scanCode);
+		equipment.setScanQrCode(scanCode);
+		equipment.setStatus(0);
+		
+		generateRecord(oldEquipmentVo , BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 1, userId, equipment.getId());
+		
+		equipmentRepository.save(equipment);
+		equipmentBindRecordRepository.save(equipmentBindRecord);
+		
+		
+		
+		return null;
 	}
 
 }

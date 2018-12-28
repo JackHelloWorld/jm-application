@@ -4,3 +4,7 @@
 /.settings/
 /UserServiceLOG/
 /.springBeans
+/.factorypath
+/transaction-logs/
+*.log
+*.lck

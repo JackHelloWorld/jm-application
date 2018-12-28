@@ -2,5 +2,9 @@
 /.classpath
 /.project
 /.settings/
-/EquipmentServiceLOG/
+/UserServiceLOG/
 /.springBeans
+/.factorypath
+/transaction-logs/
+*.log
+*.lck

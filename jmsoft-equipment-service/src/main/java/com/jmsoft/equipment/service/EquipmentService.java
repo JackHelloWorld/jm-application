@@ -87,5 +87,13 @@ public interface EquipmentService {
 	 * @return
 	 */
 	public ResponseResult reset(Long id, Long userId);
+
+	/**
+	 * 商家扫码绑定设备
+	 * @param equipmentNo 设备编码
+	 * @param userId 操作人
+	 * @return
+	 */
+	public ResponseResult scanBind(String equipmentNo, Long userId) throws Exception;
 	
 }

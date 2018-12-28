@@ -2,5 +2,9 @@
 /.classpath
 /.project
 /.settings/
-/WxServiceLOG/
+/UserServiceLOG/
 /.springBeans
+/.factorypath
+/transaction-logs/
+*.log
+*.lck

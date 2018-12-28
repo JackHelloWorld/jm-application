@@ -3,6 +3,8 @@
 /.project
 /.settings/
 /UserServiceLOG/
-/MessageServiceLOG/
-/LOGServiceLOG/
 /.springBeans
+/.factorypath
+/transaction-logs/
+*.log
+*.lck

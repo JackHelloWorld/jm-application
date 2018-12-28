@@ -336,4 +336,16 @@ public class LoginUserServiceImpl extends BaseUserService implements LoginUserSe
 		return BeanTools.setPropertiesToBean(loginUser, LoginUserVo.class);
 	}
 
+	@Override
+	public LoginUserVo findInfoById(Long userId) throws BizException {
+		
+		LoginUser loginUser = loginUserRepository.findTop1ByIdAndStatusIn(userId, new Integer[] {0,1});
+		if(loginUser == null) 
+			ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户不存在").throwBizException();
+		if(loginUser.getStatus() == 1)
+			ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "用户已被禁用").throwBizException();
+		
+		return BeanTools.setPropertiesToBean(loginUser, LoginUserVo.class);
+	}
+
 }

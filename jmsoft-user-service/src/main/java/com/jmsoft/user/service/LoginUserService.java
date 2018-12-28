@@ -83,9 +83,16 @@ public interface LoginUserService {
 	public ResponseResult findListByType(Integer[] type);
 
 	/**
-	 * 获取前台用户
+	 * 加载前台用户
 	 * @param openid
 	 * @return
 	 */
 	public LoginUserVo initLoginUserByWeChatOpenId(String openid) throws BizException;
+
+	/**
+	 * 获取前台用户信息
+	 * @param userId 用户id
+	 * @return
+	 */
+	public LoginUserVo findInfoById(Long userId) throws BizException;
 }

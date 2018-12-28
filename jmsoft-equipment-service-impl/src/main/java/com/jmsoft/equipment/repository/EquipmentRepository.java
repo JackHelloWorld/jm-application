@@ -19,5 +19,7 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long>{
 	int countByNoAndStatusInAndIdNot(String no, Integer[] status, Long id);
 
 	Equipment findTop1ByIdAndStatusIn(Long id, Integer[] status);
+
+	Equipment findTop1ByNoAndStatusIn(String no, Integer[] status);
 	
 }
