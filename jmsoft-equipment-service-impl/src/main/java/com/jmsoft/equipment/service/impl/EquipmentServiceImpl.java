@@ -376,7 +376,8 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 		
 		equipmentBindRecord.setScanQrCode(scanCode);
 		equipment.setScanQrCode(scanCode);
-		equipment.setStatus(0);
+		equipment.setStatus(3);
+		equipment.setLoginUserId(loginUserVo.getId());
 		
 		generateRecord(oldEquipmentVo , BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 1, userId, equipment.getId());
 		
