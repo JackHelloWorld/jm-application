@@ -2,6 +2,7 @@ package com.jmsoft.equipment.service;
 
 import com.jmsoft.common.data.ResponseResult;
 import com.jmsoft.equipment.vo.EquipmentVo;
+import com.jmsoft.equipment.vo.UpdateEquipmentInfoVo;
 
 /**
  * 设备服务
@@ -95,5 +96,29 @@ public interface EquipmentService {
 	 * @return
 	 */
 	public ResponseResult scanBind(String equipmentNo, Long userId) throws Exception;
+
+	/**
+	 * 修改设备信息
+	 * @param updateEquipmentInfoVo 修改项
+	 * @param userId 操作人id
+	 * @return 操作结果
+	 */
+	public ResponseResult updateEquipmentInfo(UpdateEquipmentInfoVo updateEquipmentInfoVo, Long userId) throws Exception;
+
+	/**
+	 * 共享设备
+	 * @param id 设备id
+	 * @param userId 操作人id
+	 * @return 操作结果
+	 */
+	public ResponseResult share(Long id, Long userId) throws Exception;
+
+	/**
+	 * 取消共享
+	 * @param id 设备id
+	 * @param userId 操作人id
+	 * @return 操作结果
+	 */
+	public ResponseResult cancelShare(Long id, Long userId) throws Exception;
 	
 }

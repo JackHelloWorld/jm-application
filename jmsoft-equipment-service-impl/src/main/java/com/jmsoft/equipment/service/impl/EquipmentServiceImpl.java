@@ -30,6 +30,7 @@ import com.jmsoft.equipment.repository.EquipmentRepository;
 import com.jmsoft.equipment.service.BaseEquipmentService;
 import com.jmsoft.equipment.service.EquipmentService;
 import com.jmsoft.equipment.vo.EquipmentVo;
+import com.jmsoft.equipment.vo.UpdateEquipmentInfoVo;
 import com.jmsoft.user.repository.LoginUserRepository;
 import com.jmsoft.user.service.LoginUserService;
 import com.jmsoft.user.service.UserService;
@@ -41,16 +42,16 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 
 	@Resource
 	EquipmentRepository equipmentRepository;
-	
+
 	@Resource
 	EquipmentChargeRecordRepository equipmentChargeRecordRepository;
-	
+
 	@Resource
 	LoginUserRepository loginUserRepository;
 
 	@Resource
 	EquipmentDao equipmentDao;
-	
+
 	@Resource
 	EquipmentBindRecordRepository equipmentBindRecordRepository;
 
@@ -59,7 +60,7 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 
 	@Reference
 	UserService userService;
-	
+
 	@Value("${user.equipment.code.rule}")
 	private String equipmentCodeRule;
 
@@ -225,87 +226,87 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 
 	@Override
 	public ResponseResult delete(Long id, Long userId) {
-		
+
 		Equipment equipment = equipmentRepository.findTop1ByIdAndStatusIn(id, new Integer[] {0,1,2,3,4});
-		
+
 		if(equipment == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		if(equipment.getStatus() == 2)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
-		
+
 		EquipmentVo equipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
 		equipment.setDeleteUserId(userId);
 		equipment.setDeleteTime(new Date());
 		equipment.setStatus(9);
 		equipmentRepository.save(equipment);
 		generateRecord(equipmentVo, BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 0, userId, id);
-		
+
 		return ResponseResult.SUCCESSM("删除设备成功");
 	}
 
 	@Override
 	public ResponseResult success(Long id, Long userId) {
-		
+
 		Equipment equipment = equipmentRepository.findTop1ByIdAndStatusIn(id, new Integer[] {0,1,2,3,4});
-		
+
 		if(equipment == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		if(equipment.getStatus() == 2)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
-		
+
 		if(equipment.getStatus() != 4)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备为可使用状态,无需启用");
-		
+
 		EquipmentVo equipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
-		
+
 		equipment.setStatus(1);
 		equipmentRepository.save(equipment);
 		generateRecord(equipmentVo, BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 0, userId, id);
-		
+
 		return ResponseResult.SUCCESSM("启用设备成功");
 	}
 
 	@Override
 	public ResponseResult block(Long id, Long userId) {
-		
+
 		Equipment equipment = equipmentRepository.findTop1ByIdAndStatusIn(id, new Integer[] {0,1,2,3,4});
-		
+
 		if(equipment == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		if(equipment.getStatus() == 2)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
-		
+
 		if(equipment.getStatus() == 4)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无需操作");
-		
+
 		if(equipment.getStatus() == 0) 
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备未使用,无需停用操作");
-		
+
 		EquipmentVo equipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
-		
+
 		equipment.setStatus(4);
 		equipmentRepository.save(equipment);
 		generateRecord(equipmentVo, BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 0, userId, id);
-		
+
 		return ResponseResult.SUCCESSM("停用用设备成功");
 	}
 
 	@Override
 	public ResponseResult reset(Long id, Long userId) {
-		
+
 		Equipment equipment = equipmentRepository.findTop1ByIdAndStatusIn(id, new Integer[] {0,1,2,3,4});
-		
+
 		if(equipment == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		if(equipment.getStatus() == 2)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
-		
+
 		EquipmentVo equipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
-		
+
 		equipment.setStatus(0);
 		equipment.setAddress(null);
 		equipment.setCityMoney(null);
@@ -321,77 +322,223 @@ public class EquipmentServiceImpl extends BaseEquipmentService implements Equipm
 		equipment.setMaxElectric(null);
 		equipment.setPrice(null);
 		equipment.setScanQrCode(null);
-		
+
 		equipmentRepository.save(equipment);
 		generateRecord(equipmentVo, BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 0, userId, id);
-		
+
 		//重置记录
 		equipmentChargeRecordRepository.resetInfo(equipment.getId(),new Date());
-		
+
 		return ResponseResult.SUCCESSM("重置设备成功");
 	}
 
 	@Override
 	public ResponseResult scanBind(String equipmentNo, Long userId) throws Exception {
-		
+
 		if(Tools.isEmpty(equipmentNo))
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		LoginUserVo loginUserVo = loginUserService.findInfoById(userId);
-		
+
 		//检查设备
 		Equipment equipment = equipmentRepository.findTop1ByNoAndStatusIn(equipmentNo.trim(), new Integer[] {0,1,2,3,4});
-		
+
 		if(equipment == null)
 			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
-		
+
 		if(equipment.getStatus() != 0) {
-			
+
 			/**状态,{0:初始状态,1:共享中,2:使用中,3:取消共享,4:已停用,9:已删除}*/
 			switch (equipment.getStatus()) {
 			case 4:
 				return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无法绑定");
 
 			default:
-				
+
 				if(!equipment.getLoginUserId().equals(userId))
 					return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已被绑定,当前操作失败");
 				return ResponseResult.SUCCESS("信息绑定成功", equipment.getScanQrCode());
 			}
 		}
-		
+
 		//生成绑定信息
 		EquipmentBindRecord equipmentBindRecord = new EquipmentBindRecord();
 		equipmentBindRecord.setBindTime(new Date());
 		equipmentBindRecord.setBindUserId(userId);
 		equipmentBindRecord.setEquipmentId(equipment.getId());
 		equipmentBindRecord.setStatus(0);
-		
+
 		EquipmentVo oldEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
-		
+
 		//生成二维码
 		String code = Tools.MD5(equipmentNo.trim().concat(loginUserVo.getWxOpenId()), "scan_code");
-		
+
 		String scanCode = equipmentCodeRule.replace("{code}", '{'+code+'}');
-		
+
 		equipmentBindRecord.setScanQrCode(scanCode);
 		equipment.setScanQrCode(scanCode);
 		equipment.setStatus(3);
 		equipment.setLoginUserId(loginUserVo.getId());
-		
+
 		generateRecord(oldEquipmentVo , BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 1, userId, equipment.getId());
-		
+
 		equipmentRepository.save(equipment);
 		equipmentBindRecordRepository.save(equipmentBindRecord);
-		
+
 		if(loginUserVo.getUserType() == 0) {
-			
+
 			int count = loginUserRepository.updateUserType(loginUserVo.getId(),0,1);
 			if(count != 1)
 				ResponseResult.DIY_ERROR(ResultCode.SysErrorCode, "系统繁忙,请稍后重试").throwBizException();
 		}
-		
+
 		return ResponseResult.SUCCESS("信息绑定成功", equipment.getScanQrCode());
+	}
+
+	@Override
+	public ResponseResult updateEquipmentInfo(UpdateEquipmentInfoVo updateEquipmentInfoVo, Long userId) throws Exception {
+
+		LoginUserVo loginUserVo = loginUserService.findInfoById(userId);
+
+		AnnotationUtils.validateEdit(updateEquipmentInfoVo);
+
+		Equipment equipment = equipmentRepository.findTop1ById(updateEquipmentInfoVo.getId());
+
+		if(equipment == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备不存在");
+
+		if(!equipment.getLoginUserId().equals(loginUserVo.getId()))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		/**状态,{0:初始状态,1:共享中,2:使用中,3:取消共享,4:已停用,9:已删除}*/
+		switch (equipment.getStatus()) {
+
+		case 9:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
+
+		case 0:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		case 2:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法修改");
+
+		case 4:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无法修改");
+
+		default:
+			break;
+		}
+
+		EquipmentVo oldEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+
+		equipment.setAddress(updateEquipmentInfoVo.getAddress().trim());
+		equipment.setLongitude(updateEquipmentInfoVo.getLongitude());
+		equipment.setLatitude(updateEquipmentInfoVo.getLatitude());
+
+		if(equipment.getPrice().compareTo(BigDecimal.ZERO) != 1)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备单价输入错误");
+
+		equipment.setRemark(updateEquipmentInfoVo.getRemark());
+
+		generateRecord(oldEquipmentVo , BeanTools.setPropertiesToBean(equipment, EquipmentVo.class), 1, userId, equipment.getId());
+
+		equipmentRepository.save(equipment);
+
+		return ResponseResult.SUCCESSM("设备信息更新成功");
+	}
+
+	@Override
+	public ResponseResult share(Long id, Long userId) throws Exception {
+
+		LoginUserVo loginUserVo = loginUserService.findInfoById(userId);
+
+		Equipment equipment = equipmentRepository.findTop1ById(id);
+
+		if(equipment == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备不存在");
+
+		if(!equipment.getLoginUserId().equals(loginUserVo.getId()))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		/**状态,{0:初始状态,1:共享中,2:使用中,3:取消共享,4:已停用,9:已删除}*/
+		switch (equipment.getStatus()) {
+
+		case 1:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已共享,无需此操作");
+
+		case 9:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
+
+		case 0:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		case 2:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
+
+		case 4:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无法操作");
+
+		default:
+			break;
+		}
+
+		EquipmentVo oldEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+		EquipmentVo newEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+		newEquipmentVo.setStatus(1);
+
+		generateRecord(oldEquipmentVo, newEquipmentVo, 1, userId, id);
+
+		if(equipmentRepository.updateStatus(id,equipment.getStatus(),1) != 1)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "共享失败,请稍后重试");
+
+		return ResponseResult.SUCCESSM("共享设备成功");
+	}
+
+	@Override
+	public ResponseResult cancelShare(Long id, Long userId) throws Exception {
+
+		LoginUserVo loginUserVo = loginUserService.findInfoById(userId);
+
+		Equipment equipment = equipmentRepository.findTop1ById(id);
+
+		if(equipment == null)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备不存在");
+
+		if(!equipment.getLoginUserId().equals(loginUserVo.getId()))
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		/**状态,{0:初始状态,1:共享中,2:使用中,3:取消共享,4:已停用,9:已删除}*/
+		switch (equipment.getStatus()) {
+
+		case 3:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备未共享,无需此操作");
+
+		case 9:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备信息不存在");
+
+		case 0:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "无权操作此设备");
+
+		case 2:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备正在使用中,无法操作");
+
+		case 4:
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "设备已停用,无法操作");
+
+		default:
+			break;
+		}
+
+		EquipmentVo oldEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+		EquipmentVo newEquipmentVo = BeanTools.setPropertiesToBean(equipment, EquipmentVo.class);
+		newEquipmentVo.setStatus(3);
+
+		generateRecord(oldEquipmentVo, newEquipmentVo, 1, userId, id);
+
+		if(equipmentRepository.updateStatus(id,equipment.getStatus(),3) != 1)
+			return ResponseResult.DIY_ERROR(ResultCode.DataErrorCode, "共享失败,请稍后重试");
+
+		return ResponseResult.SUCCESSM("取消共享操作成功");
 	}
 
 }
